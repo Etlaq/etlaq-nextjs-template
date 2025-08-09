@@ -18,6 +18,20 @@ npm start
 npm run lint
 ```
 
+## Template Usage
+
+This is a **template repository** for Next.js applications. Key considerations:
+
+- Example components in `components/dashboard-example/` and `components/login-example/` are demonstration pages that should be adapted or moved to `app/` directory for actual routes
+- Sample data objects (like in `app-sidebar.tsx`) contain placeholder content that should be replaced with real data sources
+- The `components/ui/` directory provides the foundational component library and should generally remain unchanged
+
+## Important Instruction Reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+
 ## Project Architecture
 
 This is a Next.js 15 template built for Etlaq Studio AI's platform. It serves as a comprehensive template showcasing modern React patterns with a complete UI component library.
@@ -101,8 +115,8 @@ The following components are examples and should be modified for specific use ca
 - `components/chart-area-interactive.tsx` - Sample chart component
 
 ### Example Pages (Modify as Needed)
-- `app/dashboard/page.tsx` - Dashboard with sample data from `app/dashboard/data.json`
-- `app/login/page.tsx` - Basic login page
+- `components/dashboard-example/page.tsx` - Dashboard example with sample data from `components/dashboard-example/data.json`
+- `components/login-example/page.tsx` - Basic login page example
 - `app/page.tsx` - Landing page template
 
 ### UI Components Library (Keep as Base)
