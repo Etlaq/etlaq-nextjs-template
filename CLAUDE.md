@@ -136,3 +136,32 @@ The `components/ui/` directory contains the shadcn/ui component library that ser
 ### TypeScript Configuration
 - `tsconfig.json` - Strict mode enabled with ES2017 target
 - Path aliases configured with `@/*` mapping to root directory
+
+## Authentication System
+
+The template includes a complete JWT-based authentication system with MongoDB integration:
+
+### Core Components
+- **JWT Authentication**: Token-based auth with 7-day expiration using `jsonwebtoken`
+- **Password Security**: Bcrypt hashing with 12 salt rounds for secure password storage
+- **MongoDB Integration**: User model with validation and unique email constraints
+- **React Context**: Client-side auth state management with `AuthContext` and `useAuth` hook
+
+### API Routes
+- `POST /api/auth/register` - User registration with email, password, and name validation
+- `POST /api/auth/login` - User login with credential verification
+- `GET /api/auth/me` - Protected route to fetch current user profile
+
+### Key Features
+- **Client-side State**: Persistent authentication state with localStorage token storage
+- **Auto-validation**: Automatic token verification on app load and invalid token cleanup
+- **Error Handling**: Comprehensive error responses for validation, network, and auth failures
+- **Middleware Helper**: `withAuth()` HOF for protecting API routes
+- **Type Safety**: Full TypeScript interfaces for User and JWT payload structures
+
+### Required Environment Variables
+```bash
+JWT_SECRET=your-secret-key
+MONGODB_URI=mongodb://localhost:27017
+DB_NAME=etlaq_auth  # optional, defaults to etlaq_auth
+```
