@@ -2,6 +2,50 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Summary
+<!-- IMPORTANT: Always update this section when making changes to the project -->
+
+### What This Project Is
+A modern Next.js 15 template repository designed for building web applications with a complete UI component library and authentication system. It provides a ready-to-use foundation with dashboard layouts, form components, data tables, and charts.
+
+### What's Implemented
+- ✅ Complete authentication system with login, register, and protected routes
+- ✅ Dashboard layout with collapsible sidebar navigation
+- ✅ Full shadcn/ui component library (buttons, forms, modals, etc.)
+- ✅ Data visualization with interactive charts
+- ✅ Data tables with sorting and filtering
+- ✅ Dark/light theme switching
+- ✅ Form validation with Zod schemas
+- ✅ Responsive design for all screen sizes
+- ✅ Example pages for dashboard and login
+
+### What's Not Implemented
+- ❌ Email verification for user registration
+- ❌ Password reset functionality
+- ❌ User profile management pages
+- ❌ Real data sources (using sample data)
+- ❌ API integration examples
+- ❌ Testing setup (unit/integration tests)
+- ❌ CI/CD pipeline configuration
+- ❌ Production deployment configuration
+- ❌ Internationalization (i18n)
+- ❌ Real-time features (WebSockets)
+
+## Changelog
+<!-- IMPORTANT: Always update this section when making changes to the codebase -->
+
+### Latest Updates
+- **Initial Template Setup** - Base Next.js 15 template with:
+  - JWT authentication system with MongoDB
+  - Shadcn/ui component library integration
+  - Dashboard layout with sidebar navigation
+  - Login and registration pages
+  - Protected API routes with middleware
+  - Theme switching (dark/light modes)
+  - Example components and pages
+  - TypeScript strict mode configuration
+  - Tailwind CSS 4 with OKLCH color space
+
 ## Development Commands
 
 ```bash
