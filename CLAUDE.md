@@ -2,50 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Summary
-<!-- IMPORTANT: Always update this section when making changes to the project -->
-
-### What This Project Is
-A modern Next.js 15 template repository designed for building web applications with a complete UI component library and authentication system. It provides a ready-to-use foundation with dashboard layouts, form components, data tables, and charts.
-
-### What's Implemented
-- ✅ Complete authentication system with login, register, and protected routes
-- ✅ Dashboard layout with collapsible sidebar navigation
-- ✅ Full shadcn/ui component library (buttons, forms, modals, etc.)
-- ✅ Data visualization with interactive charts
-- ✅ Data tables with sorting and filtering
-- ✅ Dark/light theme switching
-- ✅ Form validation with Zod schemas
-- ✅ Responsive design for all screen sizes
-- ✅ Example pages for dashboard and login
-
-### What's Not Implemented
-- ❌ Email verification for user registration
-- ❌ Password reset functionality
-- ❌ User profile management pages
-- ❌ Real data sources (using sample data)
-- ❌ API integration examples
-- ❌ Testing setup (unit/integration tests)
-- ❌ CI/CD pipeline configuration
-- ❌ Production deployment configuration
-- ❌ Internationalization (i18n)
-- ❌ Real-time features (WebSockets)
-
-## Changelog
-<!-- IMPORTANT: Always update this section when making changes to the codebase -->
-
-### Latest Updates
-- **Initial Template Setup** - Base Next.js 15 template with:
-  - JWT authentication system with MongoDB
-  - Shadcn/ui component library integration
-  - Dashboard layout with sidebar navigation
-  - Login and registration pages
-  - Protected API routes with middleware
-  - Theme switching (dark/light modes)
-  - Example components and pages
-  - TypeScript strict mode configuration
-  - Tailwind CSS 4 with OKLCH color space
-
 ## Development Commands
 
 ```bash
@@ -181,31 +137,24 @@ The `components/ui/` directory contains the shadcn/ui component library that ser
 - `tsconfig.json` - Strict mode enabled with ES2017 target
 - Path aliases configured with `@/*` mapping to root directory
 
-## Authentication System
+## Package Management
 
-The template includes a complete JWT-based authentication system with MongoDB integration:
+This project uses **npm** as the package manager. Dependencies include:
+- Core UI library: 30+ shadcn/ui components with Radix UI primitives
+- Icons: lucide-react (536+ icons) as primary, @tabler/icons-react as secondary
+- Charts: recharts for data visualization
+- Tables: @tanstack/react-table for complex data tables
+- Forms: react-hook-form + zod for validation
+- Drag & Drop: @dnd-kit suite (core, sortable, modifiers, utilities)
 
-### Core Components
-- **JWT Authentication**: Token-based auth with 7-day expiration using `jsonwebtoken`
-- **Password Security**: Bcrypt hashing with 12 salt rounds for secure password storage
-- **MongoDB Integration**: User model with validation and unique email constraints
-- **React Context**: Client-side auth state management with `AuthContext` and `useAuth` hook
+## Custom Hooks
 
-### API Routes
-- `POST /api/auth/register` - User registration with email, password, and name validation
-- `POST /api/auth/login` - User login with credential verification
-- `GET /api/auth/me` - Protected route to fetch current user profile
+- `useIsMobile()` - Detects mobile viewport (defined in `hooks/use-mobile.ts`)
+- `useSidebar()` - Manages sidebar state from SidebarContext
 
-### Key Features
-- **Client-side State**: Persistent authentication state with localStorage token storage
-- **Auto-validation**: Automatic token verification on app load and invalid token cleanup
-- **Error Handling**: Comprehensive error responses for validation, network, and auth failures
-- **Middleware Helper**: `withAuth()` HOF for protecting API routes
-- **Type Safety**: Full TypeScript interfaces for User and JWT payload structures
+## File Size Reference
 
-### Required Environment Variables
-```bash
-JWT_SECRET=your-secret-key
-MONGODB_URI=mongodb://localhost:27017
-DB_NAME=etlaq_auth  # optional, defaults to etlaq_auth
-```
+Notable component sizes for complexity assessment:
+- `components/ui/sidebar.tsx` - ~750 lines (complete sidebar system)
+- `components/data-table.tsx` - 26+ KB (full-featured data table)
+- `components/ui/` directory - ~5200 lines total (comprehensive UI library)
