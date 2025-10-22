@@ -18,23 +18,112 @@ npm start
 npm run lint
 ```
 
-## Template Usage
-
-This is a **template repository** for Next.js applications. Key considerations:
-
-- Example components in `components/dashboard-example/` and `components/login-example/` are demonstration pages that should be adapted or moved to `app/` directory for actual routes
-- Sample data objects (like in `app-sidebar.tsx`) contain placeholder content that should be replaced with real data sources
-- The `components/ui/` directory provides the foundational component library and should generally remain unchanged
-
 ## Important Instruction Reminders
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.
 ALWAYS prefer editing an existing file to creating a new one.
 NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
 
+## Specialized Agents
+
+This template includes specialized agents for common development tasks. These agents automatically provide detailed guidance when working on specific areas:
+
+### Core Development Agents
+
+**UI/Design** → `ui-design-specialist`
+- UI/UX design, color schemes, layouts, shadcn/ui components
+- Modern minimalist design (avoid AI-app clichés)
+- Works with: `image-finder` for visual assets
+
+**Authentication** → `auth-specialist`
+- JWT authentication, protected routes, session handling
+- Complete auth system with bcryptjs
+- Works with: `database-specialist` for User model
+
+**Database** → `database-specialist`
+- MongoDB/Mongoose operations, schemas, queries
+- CRUD operations, aggregation pipelines, indexes
+- Independent - can run first or parallel with UI work
+
+**API Integration** → `api-integration-specialist`
+- External APIs, webhooks, third-party services
+- Image sources (Unsplash, Pexels), public APIs
+- Independent - can run parallel with other agents
+
+**AI Features** → `ai-apps-developer`
+- Open Router API, streaming responses, chat interfaces
+- Model selection (20b/120b), provider routing
+- Works with: `auth-specialist` for protected endpoints
+
+### Support Agents
+
+**Images** → `image-finder` - Quick image sourcing for any UI work
+**Quality** → `code-reviewer` - Security and code quality checks (runs after implementation)
+**Debugging** → `nextjs-debugger` - Fix runtime errors and dev server issues
+
+
+### Agent Collaboration Tips
+
+**Parallel Execution:** These agents can work simultaneously:
+- `ui-design-specialist` + `database-specialist` (frontend/backend split)
+- `image-finder` + `api-integration-specialist` (gathering resources)
+
+**Sequential Requirements:** These must run in order:
+- `database-specialist` → `auth-specialist` (auth needs User model)
+- Any implementation → `code-reviewer` (reviews completed code)
+
+**Complex Features:** Most features use multiple agents. Example for a dashboard:
+1. `database-specialist` + `ui-design-specialist` (parallel)
+2. `auth-specialist` (after database)
+3. `api-integration-specialist` (if external data needed)
+4. `code-reviewer` (final review)
+
+## Code Quality Standards
+
+### TypeScript
+- Strict mode enabled with proper types
+- No `any` types unless absolutely necessary
+- Type all function parameters and return values
+- Use interfaces for component props
+
+### Production Code
+- Remove `console.log` statements from production code
+- Use proper logging utilities for debugging
+- Clean up commented-out code before committing
+
+### Error Handling
+- Implement error boundaries for async operations
+- Provide user-friendly error messages
+- Use try-catch blocks for API calls
+- Handle edge cases and loading states
+
+### Accessibility
+- ARIA labels for interactive elements
+- Keyboard navigation support
+- Semantic HTML elements
+- Proper focus management
+- Alt text for all images
+
+### Code Organization
+- Clean imports and organized file structure
+- Group related functionality
+- Follow Next.js file conventions
+- Use path aliases (`@/components`, `@/lib`, etc.)
+
+## Implementation Validation
+
+After implementing features, ensure:
+- ✓ Code builds successfully (`npm run build` passes)
+- ✓ No TypeScript errors or warnings
+- ✓ All requested features implemented and working
+- ✓ Responsive design on mobile and desktop
+- ✓ Proper error handling in place
+- ✓ Accessibility standards met
+- ✓ No console errors in browser
+
 ## Project Architecture
 
-This is a Next.js 15 template built for Etlaq Studio AI's platform. It serves as a comprehensive template showcasing modern React patterns with a complete UI component library.
+This is a Next.js 15 template built for Etlaq Studio AI's platform. It serves as a comprehensive template showcasing modern React patterns with a complete UI component library and JWT-based authentication.
 
 ### Tech Stack
 - **Next.js 15** with App Router and Turbopack for fast development
@@ -42,6 +131,8 @@ This is a Next.js 15 template built for Etlaq Studio AI's platform. It serves as
 - **Tailwind CSS 4** with CSS variables and custom theming
 - **Shadcn/ui** component library (New York variant with neutral base colors)
 - **React 19** with server components and modern hooks
+- **MongoDB** with Mongoose for database
+- **JWT Authentication** with bcryptjs for password hashing
 
 ### Core Dependencies
 - **UI Components**: Radix UI primitives wrapped with shadcn/ui styling
@@ -53,13 +144,25 @@ This is a Next.js 15 template built for Etlaq Studio AI's platform. It serves as
 - **Theming**: next-themes for light/dark mode switching
 - **Notifications**: Sonner for toast notifications
 - **Layout**: React Resizable Panels for flexible layouts
+- **Database**: Mongoose for MongoDB integration
+- **Authentication**: JWT tokens, bcryptjs, jsonwebtoken
+
+### Authentication System Overview
+The template includes JWT-based authentication with MongoDB. For detailed implementation guidance, use the **`auth-specialist` agent**.
+
+**Quick reference:**
+- Files: `lib/auth.ts`, `lib/middleware.ts`, `models/User.ts`, `contexts/AuthContext.tsx`
+- API routes: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
+- Use `withAuth()` middleware for protected API routes
+- Use `useAuth()` hook in client components
+- See `.env.example` for required environment variables
 
 ### Architecture Patterns
 
 #### Component Configuration
 - Shadcn/ui configured via `components.json` with path aliases:
   - `@/components` → components directory
-  - `@/lib` → lib directory  
+  - `@/lib` → lib directory
   - `@/hooks` → hooks directory
 - New York style with neutral colors and CSS variables enabled
 - Lucide React as the primary icon library
@@ -83,6 +186,10 @@ The template implements a sidebar-based dashboard layout:
 - Props spreading and TypeScript generics for flexible APIs
 - Utility-first styling with `cn()` helper for conditional classes
 
+#### Database
+- MongoDB with Mongoose ORM and global connection caching (`lib/mongodb.ts`)
+- For schema design, queries, and operations, use the **`database-specialist` agent**
+
 ### Key Architectural Decisions
 
 #### Data Flow
@@ -90,6 +197,7 @@ The template implements a sidebar-based dashboard layout:
 - Static navigation structure with placeholder URLs
 - Form validation using Zod schemas with React Hook Form
 - State management through React context and hooks
+- Authentication state managed via AuthContext with localStorage persistence
 
 #### Styling Strategy
 - Tailwind utility classes with semantic CSS variables
@@ -102,8 +210,16 @@ The template implements a sidebar-based dashboard layout:
 - ESLint with Next.js recommended rules
 - Hot reloading with Turbopack for fast development
 - Path aliases configured for clean imports
+- Build errors ignored in `next.config.ts` (change for production)
 
 ## Template Structure and Customization
+
+### Core System Files (Implemented)
+The following core functionality is already implemented:
+- **Authentication**: `lib/auth.ts`, `lib/middleware.ts`, `models/User.ts`, `contexts/AuthContext.tsx`
+- **Database**: `lib/mongodb.ts` with connection pooling
+- **API Routes**: `/api/auth/*` for authentication, `/api/protected/*` for examples
+- For working with these systems, invoke the relevant specialized agent
 
 ### Example Components (Modify as Needed)
 The following components are examples and should be modified for specific use cases:
@@ -118,6 +234,8 @@ The following components are examples and should be modified for specific use ca
 - `components/dashboard-example/page.tsx` - Dashboard example with sample data from `components/dashboard-example/data.json`
 - `components/login-example/page.tsx` - Basic login page example
 - `app/page.tsx` - Landing page template
+- `app/login/page.tsx` - Login page
+- `app/register/page.tsx` - Registration page
 
 ### UI Components Library (Keep as Base)
 The `components/ui/` directory contains the shadcn/ui component library that serves as the foundation. These should generally be kept as-is unless specific customization is required.
@@ -137,6 +255,12 @@ The `components/ui/` directory contains the shadcn/ui component library that ser
 - `tsconfig.json` - Strict mode enabled with ES2017 target
 - Path aliases configured with `@/*` mapping to root directory
 
+### Next.js Configuration
+- `next.config.ts` - Configured with:
+  - ESLint and TypeScript errors ignored during builds (change for production)
+  - Dev indicators disabled
+  - CORS headers for E2B sandbox development
+
 ## Package Management
 
 This project uses **npm** as the package manager. Dependencies include:
@@ -146,11 +270,89 @@ This project uses **npm** as the package manager. Dependencies include:
 - Tables: @tanstack/react-table for complex data tables
 - Forms: react-hook-form + zod for validation
 - Drag & Drop: @dnd-kit suite (core, sortable, modifiers, utilities)
+- Database: mongoose for MongoDB
+- Auth: jsonwebtoken, bcryptjs
 
-## Custom Hooks
+## Custom Hooks & Contexts
 
 - `useIsMobile()` - Detects mobile viewport (defined in `hooks/use-mobile.ts`)
 - `useSidebar()` - Manages sidebar state from SidebarContext
+- `useAuth()` - Access authentication state and functions (login, register, logout)
+
+## Claude Code Integration
+
+This template includes custom Claude Code agents and skills in the `.claude/` directory to enhance development workflow.
+
+### Specialized Domain Agents
+
+**UI Design Specialist** (`.claude/agents/ui-design-specialist.md`)
+- Modern minimalist design with shadcn/ui components
+- Color system, typography, layout patterns
+- iOS-inspired patterns for customer apps
+- Accessibility and responsive design
+
+**Auth Specialist** (`.claude/agents/auth-specialist.md`)
+- JWT authentication and session management
+- Protected routes and API security
+- User registration, login flows
+- Security best practices
+
+**Database Specialist** (`.claude/agents/database-specialist.md`)
+- MongoDB/Mongoose schema design
+- CRUD operations and queries
+- Aggregation pipelines
+- Performance optimization
+
+**API Integration Specialist** (`.claude/agents/api-integration-specialist.md`)
+- External APIs and webhooks
+- Image sources (Unsplash, Pexels)
+- File uploads and GraphQL
+- Rate limiting and error handling
+
+**AI Apps Developer** (`.claude/agents/ai-apps-developer.md`)
+- Open Router API integration
+- Streaming responses
+- Model selection (20b/120b)
+- AI chat interfaces
+
+### Utility Agents
+
+**Code Reviewer** (`.claude/agents/code-reviewer.md`)
+- Auto-reviews security-sensitive code
+- TypeScript quality checks
+- Performance and bug detection
+
+**Next.js Debugger** (`.claude/agents/nextjs-debugger.md`)
+- Debugs errors and performance issues
+- Dev server management
+- Route testing
+
+**Image Finder** (`.claude/agents/image-finder.md`)
+- Finds and integrates images
+- Unsplash, Pexels, placeholders
+- Proper file naming
+
+### Skills
+
+**Next.js Template Skill** (`.claude/skills/nextjs-template-skill/`)
+- Provides comprehensive reference for working with this template
+- Documents component organization and architecture patterns
+- Includes usage examples for all 30+ shadcn/ui components
+- Guidelines for replacing sample data with production implementations
+- Reference files:
+  - `SKILL.md` - Quick start and architecture overview
+  - `COMPONENTS.md` - Complete UI component library reference with examples
+  - `NEXTJS_REFERENCE.md` - Full Next.js 15 App Router documentation
+
+### Using Agents and Skills
+
+**Automatic invocation:** Specialized agents auto-invoke based on task context (e.g., `auth-specialist` for authentication tasks).
+
+**Manual invocation:** Use the Task tool with agent name for complex workflows requiring specific expertise.
+
+**Multiple agents:** Complex features often need multiple agents working together (e.g., authenticated dashboard = `auth-specialist` + `database-specialist` + `ui-design-specialist`).
+
+**Skills:** Reference the Next.js Template Skill for component usage examples and architecture patterns.
 
 ## File Size Reference
 
