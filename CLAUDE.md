@@ -2,10 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Development Server
+
+**IMPORTANT**: The development server is most likely already running on **port 3000** with auto-restart enabled. You do NOT need to restart or run the server manually.
+
+- To check server status or errors, **read the server logs from `server.log`** instead of restarting
+- The server automatically restarts when you make code changes
+- Server logs are saved to `server.log` in the project root
+- Only run commands if explicitly requested by the user
+
 ## Development Commands
 
 ```bash
-# Start development server with Turbopack
+# Start development server with Turbopack (usually already running)
 npm run dev
 
 # Build for production
@@ -77,6 +86,125 @@ This template includes specialized agents for common development tasks. These ag
 2. `auth-specialist` (after database)
 3. `api-integration-specialist` (if external data needed)
 4. `code-reviewer` (final review)
+
+### When to Use Which Agent - Task Guide
+
+**IMPORTANT**: Always use the specialized agents for their respective domains. They provide comprehensive, context-aware guidance and prevent common mistakes.
+
+#### UI/Design Tasks → `ui-design-specialist`
+- Creating new pages or components
+- Implementing responsive layouts
+- Choosing color schemes and typography
+- Adding shadcn/ui components
+- Building forms, modals, dialogs
+- Implementing navigation menus
+- Creating data tables or charts
+- Any customer-facing interface work
+
+#### Database Tasks → `database-specialist`
+- Creating new Mongoose models/schemas
+- Writing database queries
+- Implementing CRUD operations
+- Setting up indexes or migrations
+- Designing data relationships
+- Optimizing query performance
+- Working with aggregation pipelines
+- Any MongoDB/Mongoose work
+
+#### Authentication Tasks → `auth-specialist`
+- Implementing login/register flows
+- Creating protected routes
+- Adding role-based access control
+- Implementing password reset
+- Working with JWT tokens
+- Session management
+- Adding OAuth/social login
+- Any security or auth-related work
+
+#### API Integration Tasks → `api-integration-specialist`
+- Integrating external APIs
+- Setting up webhooks
+- Working with third-party services
+- Implementing file uploads
+- Adding payment integrations
+- Working with GraphQL
+- Rate limiting and caching
+- Any external service integration
+
+#### AI Features Tasks → `ai-apps-developer`
+- Integrating AI models
+- Implementing chat interfaces
+- Adding streaming responses
+- Working with Open Router API
+- Building AI-powered features
+- Implementing embeddings/vectors
+- Any AI/ML integration work
+
+#### Image/Asset Tasks → `image-finder`
+- Finding images for landing pages
+- Sourcing icons or illustrations
+- Creating image galleries
+- Finding placeholder images
+- Any visual asset needs
+
+#### Code Quality Tasks → `code-reviewer`
+- Reviewing completed features
+- Security audits
+- Performance optimization
+- Code refactoring suggestions
+- TypeScript quality checks
+- After any significant implementation
+
+#### Debugging Tasks → `nextjs-debugger`
+- Fixing build errors
+- Resolving runtime errors
+- Debugging 404/500 errors
+- Fixing hydration errors
+- Performance issues
+- Dev server problems
+
+### Common Task Examples
+
+**Task: "Build a user profile page"**
+```
+1. Use `database-specialist` - Design User profile schema
+2. Use `ui-design-specialist` - Create profile page UI
+3. Use `auth-specialist` - Add authentication protection
+4. Use `code-reviewer` - Review implementation
+```
+
+**Task: "Add blog with images"**
+```
+1. Use `database-specialist` - Create Blog model
+2. Use `ui-design-specialist` - Design blog layout
+3. Use `image-finder` - Source placeholder images
+4. Use `api-integration-specialist` - Add image upload to API
+5. Use `code-reviewer` - Security review
+```
+
+**Task: "Implement AI chat feature"**
+```
+1. Use `database-specialist` - Create Message/Chat schemas
+2. Use `ai-apps-developer` - Integrate AI streaming
+3. Use `ui-design-specialist` - Build chat interface
+4. Use `auth-specialist` - Add user authentication
+5. Use `code-reviewer` - Review security
+```
+
+**Task: "Fix broken authentication"**
+```
+1. Use `nextjs-debugger` - Identify error source
+2. Use `auth-specialist` - Fix auth implementation
+3. Use `code-reviewer` - Verify security
+```
+
+**Task: "Optimize slow page load"**
+```
+1. Use `nextjs-debugger` - Profile performance
+2. Use `database-specialist` - Optimize queries if DB-related
+3. Use `ui-design-specialist` - Optimize UI rendering if frontend
+4. Use `code-reviewer` - Final performance review
+```
 
 ## Code Quality Standards
 

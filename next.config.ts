@@ -1,13 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // TEMPLATE NOTE: These are disabled for faster development iteration
+  // For production builds, consider enabling these to catch errors early:
+  // eslint: { ignoreDuringBuilds: false },
+  // typescript: { ignoreBuildErrors: false },
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  // Allow E2B sandbox domains for development
-  devIndicators: {
-    buildActivity: false,
-  },
-  // This will be needed in future Next.js versions
+
+  // CORS headers for development (allows local dev with external tools)
   async headers() {
     return [
       {
