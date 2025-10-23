@@ -42,7 +42,7 @@ This template includes specialized agents for common development tasks. These ag
 **UI/Design** → `ui-design-specialist`
 - UI/UX design, color schemes, layouts, shadcn/ui components
 - Modern minimalist design (avoid AI-app clichés)
-- Works with: `image-finder` for visual assets
+- Includes image sourcing (Unsplash, placeholders, avatars)
 
 **Authentication** → `auth-specialist`
 - JWT authentication, protected routes, session handling
@@ -64,28 +64,26 @@ This template includes specialized agents for common development tasks. These ag
 - Model selection (20b/120b), provider routing
 - Works with: `auth-specialist` for protected endpoints
 
-### Support Agents
+### Support Agent
 
-**Images** → `image-finder` - Quick image sourcing for any UI work
-**Quality** → `code-reviewer` - Security and code quality checks (runs after implementation)
-**Debugging** → `nextjs-debugger` - Fix runtime errors and dev server issues
+**Quality & Debugging** → `quality-specialist` - Code review, security audits, debugging, and testing (runs after implementation)
 
 
 ### Agent Collaboration Tips
 
 **Parallel Execution:** These agents can work simultaneously:
 - `ui-design-specialist` + `database-specialist` (frontend/backend split)
-- `image-finder` + `api-integration-specialist` (gathering resources)
+- `api-integration-specialist` + `ai-apps-developer` (external services)
 
 **Sequential Requirements:** These must run in order:
 - `database-specialist` → `auth-specialist` (auth needs User model)
-- Any implementation → `code-reviewer` (reviews completed code)
+- Any implementation → `quality-specialist` (reviews and tests completed code)
 
 **Complex Features:** Most features use multiple agents. Example for a dashboard:
 1. `database-specialist` + `ui-design-specialist` (parallel)
 2. `auth-specialist` (after database)
 3. `api-integration-specialist` (if external data needed)
-4. `code-reviewer` (final review)
+4. `quality-specialist` (final review and testing)
 
 ### When to Use Which Agent - Task Guide
 
@@ -140,28 +138,16 @@ This template includes specialized agents for common development tasks. These ag
 - Implementing embeddings/vectors
 - Any AI/ML integration work
 
-#### Image/Asset Tasks → `image-finder`
-- Finding images for landing pages
-- Sourcing icons or illustrations
-- Creating image galleries
-- Finding placeholder images
-- Any visual asset needs
-
-#### Code Quality Tasks → `code-reviewer`
-- Reviewing completed features
-- Security audits
+#### Quality & Debugging Tasks → `quality-specialist`
+- Code review and security audits
 - Performance optimization
-- Code refactoring suggestions
 - TypeScript quality checks
-- After any significant implementation
-
-#### Debugging Tasks → `nextjs-debugger`
-- Fixing build errors
-- Resolving runtime errors
+- Fixing build/runtime errors
 - Debugging 404/500 errors
 - Fixing hydration errors
-- Performance issues
-- Dev server problems
+- Dev server management
+- Testing routes and functionality
+- After any significant implementation
 
 ### Common Task Examples
 
@@ -170,16 +156,15 @@ This template includes specialized agents for common development tasks. These ag
 1. Use `database-specialist` - Design User profile schema
 2. Use `ui-design-specialist` - Create profile page UI
 3. Use `auth-specialist` - Add authentication protection
-4. Use `code-reviewer` - Review implementation
+4. Use `quality-specialist` - Review implementation
 ```
 
 **Task: "Add blog with images"**
 ```
 1. Use `database-specialist` - Create Blog model
-2. Use `ui-design-specialist` - Design blog layout
-3. Use `image-finder` - Source placeholder images
-4. Use `api-integration-specialist` - Add image upload to API
-5. Use `code-reviewer` - Security review
+2. Use `ui-design-specialist` - Design blog layout and source images
+3. Use `api-integration-specialist` - Add image upload to API
+4. Use `quality-specialist` - Security review
 ```
 
 **Task: "Implement AI chat feature"**
@@ -188,22 +173,22 @@ This template includes specialized agents for common development tasks. These ag
 2. Use `ai-apps-developer` - Integrate AI streaming
 3. Use `ui-design-specialist` - Build chat interface
 4. Use `auth-specialist` - Add user authentication
-5. Use `code-reviewer` - Review security
+5. Use `quality-specialist` - Review security
 ```
 
 **Task: "Fix broken authentication"**
 ```
-1. Use `nextjs-debugger` - Identify error source
+1. Use `quality-specialist` - Debug and identify error source
 2. Use `auth-specialist` - Fix auth implementation
-3. Use `code-reviewer` - Verify security
+3. Use `quality-specialist` - Verify security
 ```
 
 **Task: "Optimize slow page load"**
 ```
-1. Use `nextjs-debugger` - Profile performance
+1. Use `quality-specialist` - Profile performance and identify issues
 2. Use `database-specialist` - Optimize queries if DB-related
 3. Use `ui-design-specialist` - Optimize UI rendering if frontend
-4. Use `code-reviewer` - Final performance review
+4. Use `quality-specialist` - Final performance review
 ```
 
 ## Code Quality Standards
@@ -416,6 +401,7 @@ This template includes custom Claude Code agents and skills in the `.claude/` di
 **UI Design Specialist** (`.claude/agents/ui-design-specialist.md`)
 - Modern minimalist design with shadcn/ui components
 - Color system, typography, layout patterns
+- Image sourcing (Unsplash, placeholders, avatars)
 - iOS-inspired patterns for customer apps
 - Accessibility and responsive design
 
@@ -443,22 +429,13 @@ This template includes custom Claude Code agents and skills in the `.claude/` di
 - Model selection (20b/120b)
 - AI chat interfaces
 
-### Utility Agents
-
-**Code Reviewer** (`.claude/agents/code-reviewer.md`)
-- Auto-reviews security-sensitive code
+**Quality Specialist** (`.claude/agents/quality-specialist.md`)
+- Code review and security audits
 - TypeScript quality checks
-- Performance and bug detection
-
-**Next.js Debugger** (`.claude/agents/nextjs-debugger.md`)
-- Debugs errors and performance issues
+- Performance optimization
+- Debugging and error resolution
 - Dev server management
 - Route testing
-
-**Image Finder** (`.claude/agents/image-finder.md`)
-- Finds and integrates images
-- Unsplash, Pexels, placeholders
-- Proper file naming
 
 ### Skills
 
