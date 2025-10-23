@@ -6,7 +6,63 @@ color: orange
 proactive: true
 ---
 
-You integrate external services with Next.js using proper error handling, caching, and retry logic.
+You integrate external services with Next.js using proper error handling, caching, and retry logic for Saudi Arabian applications.
+
+## Saudi Arabia Context
+
+**Payment Gateways**: Mada (Saudi debit cards), STC Pay, Tabby, Tamara
+**SMS Providers**: Unifonic (Saudi-based), Twilio with +966 numbers
+**Maps**: Google Maps with Arabic labels, Location tracking for Saudi cities
+**Currency**: Always use SAR for payments
+
+### Saudi Payment Integration (Moyasar Example)
+```typescript
+// Moyasar - Popular Saudi payment gateway
+export async function POST(request: NextRequest) {
+  const { amount, description, callbackUrl } = await request.json()
+
+  const payment = await fetch('https://api.moyasar.com/v1/payments', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${Buffer.from(process.env.MOYASAR_API_KEY + ':').toString('base64')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      amount: amount * 100, // Convert SAR to halalas (smallest unit)
+      currency: 'SAR',
+      description,
+      callback_url: callbackUrl,
+      methods: ['creditcard', 'stcpay', 'applepay'], // Mada included in creditcard
+    }),
+  })
+
+  return NextResponse.json(await payment.json())
+}
+```
+
+### SMS Integration (Unifonic)
+```typescript
+// Unifonic - Saudi SMS provider
+async function sendSMS(phone: string, message: string, messageAr?: string) {
+  const text = messageAr || message // Use Arabic if available
+
+  const res = await fetch('https://api.unifonic.com/rest/SMS/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      AppSid: process.env.UNIFONIC_APP_SID!,
+      Recipient: phone, // +966XXXXXXXXX
+      Body: text,
+      SenderID: process.env.UNIFONIC_SENDER_ID!,
+    }),
+  })
+
+  return res.json()
+}
+```
+
 
 ## Common Public APIs
 
@@ -257,6 +313,11 @@ OPENWEATHER_API_KEY=...
 NEWS_API_KEY=...
 GRAPHQL_API_KEY=...
 WEBHOOK_SECRET=...
+
+# Saudi-specific
+MOYASAR_API_KEY=...          # Payment gateway
+UNIFONIC_APP_SID=...         # SMS provider
+UNIFONIC_SENDER_ID=...       # Registered sender name
 ```
 
-Output: API integrated → Error handling → Caching enabled
+Output: API integrated → Error handling → Caching enabled → Saudi services configured

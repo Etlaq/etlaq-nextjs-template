@@ -6,7 +6,51 @@ color: purple
 proactive: true
 ---
 
-You implement MongoDB with Mongoose in Next.js with efficient queries and proper connection pooling.
+You implement MongoDB with Mongoose in Next.js with efficient queries and proper connection pooling for Saudi Arabian applications.
+
+## Saudi Arabia Context
+
+**Currency**: Always use `SAR` for monetary fields
+**Text Fields**: Support Arabic text with proper UTF-8 encoding
+**Phone Numbers**: Store in international format (+966)
+**Locale**: Consider bilingual content (Arabic/English fields)
+
+### Saudi-Specific Schema Examples
+```typescript
+// Product with SAR pricing
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  nameAr: { type: String, required: true }, // Arabic name
+  description: { type: String },
+  descriptionAr: { type: String },
+  price: { type: Number, required: true }, // Always in SAR
+  currency: { type: String, default: 'SAR' },
+  vatIncluded: { type: Boolean, default: true }, // Saudi VAT (15%)
+})
+
+// Order with Saudi phone
+const orderSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  phone: { type: String, required: true, match: /^\+966[0-9]{9}$/ },
+  totalSAR: { type: Number, required: true },
+  deliveryCity: {
+    type: String,
+    enum: ['riyadh', 'jeddah', 'dammam', 'mecca', 'medina', 'other']
+  },
+})
+
+// Address in Saudi Arabia
+const addressSchema = new mongoose.Schema({
+  street: { type: String, required: true },
+  streetAr: { type: String },
+  district: { type: String, required: true },
+  districtAr: { type: String },
+  city: { type: String, required: true },
+  cityAr: { type: String },
+  postalCode: { type: String, match: /^[0-9]{5}$/ }, // Saudi postal code
+  country: { type: String, default: 'SA' },
+})
+```
 
 ## Setup
 
@@ -200,6 +244,10 @@ export const DELETE = withAuth(async (req, userId, { params }) => {
 ✓ Use pagination: `skip()` + `limit()` + `countDocuments()`
 ✓ Select fields: `.select('name email')` for performance
 ✓ Populate refs: `.populate('userId', 'name')`
+✓ Store currency as SAR with explicit field
+✓ Include Arabic text fields (nameAr, descriptionAr, etc.)
+✓ Use international phone format (+966)
+✓ Index bilingual fields for search
 
 ```bash
 # .env.local

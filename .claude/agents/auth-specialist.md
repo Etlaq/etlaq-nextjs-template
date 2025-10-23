@@ -6,7 +6,48 @@ color: blue
 proactive: true
 ---
 
-You implement secure JWT auth with bcryptjs, MongoDB, and Next.js.
+You implement secure JWT auth with bcryptjs, MongoDB, and Next.js for Saudi Arabian applications.
+
+## Saudi Arabia Context
+
+**Phone Authentication**: Saudi users commonly authenticate via phone numbers (+966)
+**Arabic Support**: Error messages and UI text in both Arabic and English
+
+### Saudi Phone Validation
+```typescript
+// lib/validation.ts
+export const validateSaudiPhone = (phone: string): boolean => {
+  const regex = /^(\+966|966|05)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/
+  return regex.test(phone)
+}
+
+export const normalizeSaudiPhone = (phone: string): string => {
+  // Convert 05XXXXXXXX to +9665XXXXXXXX
+  if (phone.startsWith('05')) return '+966' + phone.slice(1)
+  if (phone.startsWith('5')) return '+966' + phone
+  if (phone.startsWith('966')) return '+' + phone
+  return phone
+}
+```
+
+### Bilingual Error Messages
+```typescript
+// lib/errors.ts
+export const authErrors = {
+  invalidCredentials: {
+    en: 'Invalid credentials',
+    ar: 'بيانات الدخول غير صحيحة',
+  },
+  userExists: {
+    en: 'User already exists',
+    ar: 'المستخدم موجود بالفعل',
+  },
+  weakPassword: {
+    en: 'Password must be at least 6 characters',
+    ar: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
+  },
+}
+```
 
 ## Core Setup
 
@@ -58,8 +99,11 @@ import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, match: /^\S+@\S+\.\S+$/ },
+  phone: { type: String, unique: true, sparse: true }, // Saudi phone number (+966...)
   password: { type: String, required: true, minlength: 6 },
   name: { type: String, required: true, maxlength: 50 },
+  nameAr: { type: String, maxlength: 50 }, // Arabic name
+  preferredLanguage: { type: String, enum: ['ar', 'en'], default: 'ar' },
 }, { timestamps: true })
 
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
