@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **IMPORTANT**: The development server is most likely already running on **port 3000** with auto-restart enabled. You do NOT need to restart or run the server manually.
 
-- To check server status or errors, **read the server logs from `server.log`** instead of restarting
+- To check server status or errors, **read the server logs from `/server.log`** instead of restarting
 - The server automatically restarts when you make code changes
-- Server logs are saved to `server.log` in the project root
+- Server logs are saved to `/server.log` in the project root
 - Only run commands if explicitly requested by the user
 
 ## Development Commands
