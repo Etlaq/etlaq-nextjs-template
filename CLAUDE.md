@@ -18,7 +18,64 @@ npm start
 npm run lint
 ```
 
-**IMPORTANT**: The development server is most likely already running on **port 3000**. Check `/server.log` for status instead of restarting.
+**IMPORTANT**: The development server is most likely already running on **port 3000**. Check `./server.log` for status instead of restarting.
+
+## Error Checking & Validation
+
+**CRITICAL**: After making ANY changes (components, API routes, database, auth), ALWAYS verify there are no runtime errors:
+
+### 1. Check Server Logs
+```bash
+# Check for errors in server logs
+tail -n 50 ./server.log
+
+# Watch logs in real-time while testing
+tail -f ./server.log
+```
+
+**Look for**:
+- Compilation errors (TypeScript, syntax)
+- Runtime errors (module not found, undefined)
+- API route errors (500, auth failures)
+- Database connection issues
+- Next.js build warnings/errors
+
+### 2. Test Pages with Curl
+```bash
+# Test homepage
+curl -I http://localhost:3000/
+
+# Test dashboard
+curl -I http://localhost:3000/dashboard
+
+# Test API routes
+curl http://localhost:3000/api/health
+curl -X POST http://localhost:3000/api/test -H "Content-Type: application/json" -d '{"test": true}'
+
+# Test with auth
+curl http://localhost:3000/api/protected -H "Authorization: Bearer YOUR_TOKEN"
+
+# Check status codes (200 = success, 500 = error, 404 = not found)
+curl -w "%{http_code}" -o /dev/null -s http://localhost:3000/
+```
+
+### 3. Validation Workflow
+
+**After ANY change**:
+1. ✓ Check `server.log` for compilation/runtime errors
+2. ✓ Curl relevant pages/routes to verify they return 200
+3. ✓ Check for console errors in browser (if UI change)
+4. ✓ Verify auth protection (401/403 for protected routes)
+5. ✓ Test with invalid data to confirm error handling
+
+**Common Error Patterns**:
+| Status | Meaning | Action |
+|--------|---------|--------|
+| 200 | Success | ✓ Page working |
+| 404 | Not Found | Check file location in app/ |
+| 500 | Server Error | Check server.log for stack trace |
+| 401 | Unauthorized | Verify JWT token/auth middleware |
+| 403 | Forbidden | Check ownership validation |
 
 ## Specialized Agents
 
@@ -31,7 +88,9 @@ This template includes domain-specific agents that auto-invoke based on task con
 - **`ai-apps-developer`** - Open Router API, streaming, chat interfaces
 - **`quality-specialist`** - Code review, debugging, testing (runs after implementation)
 
-**Agent Collaboration**: Most features need multiple agents. Run `database-specialist` + `ui-design-specialist` in parallel, then `auth-specialist` sequentially. Always finish with `quality-specialist`.
+**Agent Collaboration**: Most features need multiple agents. Run `database-specialist` + `ui-design-specialist` in parallel, then `auth-specialist` sequentially. Always finish with `quality-specialist` for error checking.
+
+**Error Checking**: ALL agents MUST check `server.log` and curl test pages after making changes. See "Error Checking & Validation" section above.
 
 ## Application Context: Saudi Arabia
 
@@ -140,10 +199,3 @@ MongoDB connection uses global caching to prevent connection exhaustion in serve
 **Image Sources**:
 - External images configured in `next.config.ts` for Pexels API
 - Use `api-integration-specialist` for Unsplash/Pexels integration
-
-## Claude Code Skills
-
-Reference `.claude/skills/nextjs-template-skill/` for:
-- `SKILL.md` - Quick start and architecture
-- `COMPONENTS.md` - All 30+ shadcn/ui component examples
-- `NEXTJS_REFERENCE.md` - Next.js 15 App Router documentation

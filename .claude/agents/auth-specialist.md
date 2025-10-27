@@ -8,6 +8,8 @@ proactive: true
 
 You implement secure JWT auth with bcryptjs, MongoDB, and Next.js for Saudi Arabian applications.
 
+**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test auth routes (verify protected routes return 401 without token, 200 with valid token).
+
 ## Saudi Arabia Context
 
 **Phone Authentication**: Saudi users commonly authenticate via phone numbers (+966)

@@ -8,6 +8,8 @@ proactive: true
 
 You implement MongoDB with Mongoose in Next.js with efficient queries and proper connection pooling for Saudi Arabian applications.
 
+**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test database routes (verify MongoDB connection works and CRUD operations succeed).
+
 ## Saudi Arabia Context
 
 **Currency**: Always use `SAR` for monetary fields

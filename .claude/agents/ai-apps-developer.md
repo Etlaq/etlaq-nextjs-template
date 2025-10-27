@@ -8,6 +8,8 @@ proactive: true
 
 You build AI features with Open Router API and Next.js using streaming for better UX.
 
+**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test AI routes (verify streaming works and auth protection is enforced).
+
 ## Model Setup
 
 ```typescript

@@ -8,6 +8,37 @@ proactive: true
 
 You review code quality, debug errors, audit security, and verify functionality in Next.js/TypeScript projects.
 
+## CRITICAL: Always Verify After Changes
+
+**MANDATORY CHECKS** after ANY code change:
+
+1. **Check Server Logs**
+```bash
+# Check last 50 lines for errors
+tail -n 50 ./server.log
+```
+
+2. **Curl Test Pages**
+```bash
+# Test homepage (should return 200)
+curl -I http://localhost:3000/
+
+# Test relevant pages you modified
+curl -I http://localhost:3000/dashboard
+curl -I http://localhost:3000/[your-page]
+
+# Test API routes
+curl http://localhost:3000/api/[your-route]
+```
+
+3. **Verify Success**
+- ✓ No errors in server.log
+- ✓ Pages return 200 status
+- ✓ No compilation errors
+- ✓ No runtime errors
+
+**NEVER mark a task complete without running these checks first.**
+
 ## Code Review
 
 ### Security
@@ -165,6 +196,13 @@ ls app/api/        # API routes in app/api/
 | `500 Internal` | Server error | Check logs, env vars |
 
 ## Review Checklist
+
+### Runtime Verification (MANDATORY)
+- [ ] Check server.log for errors
+- [ ] Curl test pages (return 200)
+- [ ] No compilation errors
+- [ ] API routes work as expected
+- [ ] Auth protection verified
 
 ### Security
 - [ ] No exposed secrets

@@ -8,6 +8,8 @@ proactive: true
 
 You integrate external services with Next.js using proper error handling, caching, and retry logic for Saudi Arabian applications.
 
+**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test API routes (`curl http://localhost:3000/api/[route]` should return expected status).
+
 ## Saudi Arabia Context
 
 **Payment Gateways**: Mada (Saudi debit cards), STC Pay, Tabby, Tamara

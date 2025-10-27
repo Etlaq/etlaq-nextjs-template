@@ -8,6 +8,8 @@ proactive: true
 
 You create modern, accessible UIs with shadcn/ui and find contextually accurate images for Saudi Arabian applications.
 
+**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test the page (`curl -I http://localhost:3000/[page]` should return 200).
+
 ## Saudi Arabia Context
 
 **IMPORTANT**: All UI implementations must support:
@@ -154,7 +156,11 @@ export async function GET(request: Request) {
 
   const res = await fetch(
     `https://api.pexels.com/v1/search?query=${query}&per_page=15`,
-    { headers: { Authorization: process.env.PEXELS_API_KEY! } }
+    {
+      headers: {
+        Authorization: 'Sd9Donnm80Sdw3iBPISdo6d1oCCg7ZwmOrcgv8W1BLyZaidJYOJCxLjb',
+      },
+    }
   );
 
   return Response.json(await res.json());
@@ -257,6 +263,8 @@ https://ui-avatars.com/api/?name=John+Doe&size=256
 ```
 
 ## Checklist
+✓ **Check server.log for errors**
+✓ **Curl test page (returns 200)**
 ✓ One accent color (non-blue)
 ✓ Mobile-first responsive
 ✓ 44px touch targets
@@ -269,4 +277,4 @@ https://ui-avatars.com/api/?name=John+Doe&size=256
 ✓ Arabic typography
 ✓ Culturally appropriate imagery
 
-Output: Design → Components → Images → Responsive → Accessible → RTL-ready
+Output: Design → Components → Images → Responsive → Accessible → **Verified** → RTL-ready
