@@ -1,6 +1,6 @@
 ---
 name: nextjs-template-skill
-description: Work with the Etlaq Next.js 15 template featuring shadcn/ui components, sidebar layouts, and example pages. Use when building features, modifying components, or working with the dashboard template structure.
+description: Work with the Etlaq Next.js 16 template featuring shadcn/ui components, sidebar layouts, and example pages. Use when building features, modifying components, or working with the dashboard template structure.
 ---
 
 # Next.js Template Development
@@ -97,7 +97,7 @@ const data = await fetchNavigationData()
 
 ## Development Guidelines
 
-**Full Next.js 15 App Router documentation**: See [NEXTJS_REFERENCE.md](nextjs-template-skill/NEXTJS_REFERENCE.md)
+**Full Next.js 16 App Router documentation**: See [NEXTJS_REFERENCE.md](nextjs-template-skill/NEXTJS_REFERENCE.md)
 
 ### Creating New Pages
 1. Create route in `app/` directory
@@ -151,8 +151,8 @@ const { theme, setTheme } = useTheme()
 ## Guidelines
 
 - **TypeScript**: Strict mode enabled - fix all type errors
-- **React 19**: Using latest React with partial prerendering
-- **Next.js 15**: App Router with Server Components by default
+- **React 19.2**: Using latest React with partial prerendering
+- **Next.js 16**: App Router with Server Components by default, Turbopack for fast compilation
 - **Package manager**: Use `npm` (not pnpm or yarn)
 - **File creation**: Edit existing files when possible, avoid creating new ones unless necessary
 - **Component reuse**: Always check `components/ui/` for existing components before creating new ones

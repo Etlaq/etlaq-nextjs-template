@@ -18,184 +18,217 @@ npm start
 npm run lint
 ```
 
-**IMPORTANT**: The development server is most likely already running on **port 3000**. Check `./server.log` for status instead of restarting.
-
-## Error Checking & Validation
-
-**CRITICAL**: After making ANY changes (components, API routes, database, auth), ALWAYS verify there are no runtime errors:
-
-### 1. Check Server Logs
-```bash
-# Check for errors in server logs
-tail -n 50 ./server.log
-
-# Watch logs in real-time while testing
-tail -f ./server.log
-```
-
-**Look for**:
-- Compilation errors (TypeScript, syntax)
-- Runtime errors (module not found, undefined)
-- API route errors (500, auth failures)
-- Database connection issues
-- Next.js build warnings/errors
-
-### 2. Test Pages with Curl
-```bash
-# Test homepage
-curl -I http://localhost:3000/
-
-# Test dashboard
-curl -I http://localhost:3000/dashboard
-
-# Test API routes
-curl http://localhost:3000/api/health
-curl -X POST http://localhost:3000/api/test -H "Content-Type: application/json" -d '{"test": true}'
-
-# Test with auth
-curl http://localhost:3000/api/protected -H "Authorization: Bearer YOUR_TOKEN"
-
-# Check status codes (200 = success, 500 = error, 404 = not found)
-curl -w "%{http_code}" -o /dev/null -s http://localhost:3000/
-```
-
-### 3. Validation Workflow
-
-**After ANY change**:
-1. ✓ Check `server.log` for compilation/runtime errors
-2. ✓ Curl relevant pages/routes to verify they return 200
-3. ✓ Check for console errors in browser (if UI change)
-4. ✓ Verify auth protection (401/403 for protected routes)
-5. ✓ Test with invalid data to confirm error handling
-
-**Common Error Patterns**:
-| Status | Meaning | Action |
-|--------|---------|--------|
-| 200 | Success | ✓ Page working |
-| 404 | Not Found | Check file location in app/ |
-| 500 | Server Error | Check server.log for stack trace |
-| 401 | Unauthorized | Verify JWT token/auth middleware |
-| 403 | Forbidden | Check ownership validation |
-
-## Specialized Agents
-
-This template includes domain-specific agents that auto-invoke based on task context. Use them explicitly for complex workflows:
-
-- **`ui-design-specialist`** - UI/UX, shadcn/ui components, layouts, image sourcing
-- **`auth-specialist`** - JWT auth, protected routes, session management (requires User model)
-- **`database-specialist`** - MongoDB/Mongoose schemas, queries, aggregations (runs independently)
-- **`api-integration-specialist`** - External APIs, webhooks, file uploads (runs independently)
-- **`ai-apps-developer`** - Open Router API, streaming, chat interfaces
-- **`quality-specialist`** - Code review, debugging, testing (runs after implementation)
-
-**Agent Collaboration**: Most features need multiple agents. Run `database-specialist` + `ui-design-specialist` in parallel, then `auth-specialist` sequentially. Always finish with `quality-specialist` for error checking.
-
-**Error Checking**: ALL agents MUST check `server.log` and curl test pages after making changes. See "Error Checking & Validation" section above.
-
-## Application Context: Saudi Arabia
-
-This template is designed for the Saudi Arabian market:
-
-- **Currency**: Saudi Riyal (SAR) with `new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR' })`
-- **Locale**: Arabic (ar-SA) primary, English secondary with RTL support
-- **Phone**: Saudi format (+966) - `/^(\+966|966|05)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/`
-- **Date/Time**: Hijri calendar support where appropriate
-- **Payments**: Mada, STC Pay, Apple Pay, Visa/Mastercard
-- **Cultural**: Conservative design, Sunday-Thursday work week
+**IMPORTANT**: Development server runs on **port 3000**. Check the terminal output for compilation errors and warnings.
 
 ## Project Architecture
 
-Next.js 15 template with Next.js App Router, TypeScript 5, Tailwind CSS 4, MongoDB/Mongoose, JWT authentication, and 30+ shadcn/ui components (New York variant, neutral colors).
+Next.js 16 template with App Router, TypeScript 5 (strict mode), Tailwind CSS 4 (OKLCH colors), MongoDB/Mongoose, JWT authentication, and 30+ shadcn/ui components (New York variant).
 
-### Authentication Flow (Multi-File Pattern)
+### Authentication System (Multi-File Pattern)
 
-JWT-based authentication spans multiple files:
+JWT-based authentication is split across multiple files that work together:
 
-1. **`lib/auth.ts`** - Core auth utilities (hashPassword, verifyPassword, generateToken, verifyToken)
-2. **`lib/middleware.ts`** - `withAuth()` wrapper for protecting API routes
-3. **`models/User.ts`** - Mongoose User schema
-4. **`contexts/AuthContext.tsx`** - Client-side auth state with localStorage persistence
-5. **API Routes** - `/api/auth/{register,login,me}` for authentication endpoints
+**Core Files**:
+1. **`lib/auth.ts`** - Core utilities: `hashPassword()`, `verifyPassword()`, `generateToken()`, `verifyToken()`, `extractTokenFromHeader()`
+2. **`lib/middleware.ts`** - `withAuth()` HOF that wraps API routes and extracts userId from JWT
+3. **`models/User.ts`** - Mongoose schema with email validation, password hashing, timestamps
+4. **`contexts/AuthContext.tsx`** - Client-side React Context with localStorage persistence
+5. **`app/api/auth/{register,login,me}/route.ts`** - Authentication endpoints
 
-**Usage Pattern**:
+**Usage Patterns**:
 ```typescript
-// Protect API routes with withAuth() middleware
+// Server: Protect API routes with middleware
+import { withAuth } from '@/lib/middleware';
+
 export const GET = withAuth(async (request, userId) => {
-  // userId is automatically extracted from JWT
+  // userId is automatically extracted from JWT token
+  // Return 401 if token is missing/invalid
 });
 
-// Access auth in client components
-const { user, login, logout } = useAuth();
+// Client: Access auth state in components
+'use client';
+import { useAuth } from '@/contexts/AuthContext';
+
+function MyComponent() {
+  const { user, login, logout, loading } = useAuth();
+  // user contains { id, email, name, createdAt, updatedAt }
+}
 ```
+
+**Token Flow**:
+- Registration/login → server generates JWT (7-day expiry) → client stores in localStorage
+- Protected requests → client sends `Authorization: Bearer <token>` header
+- `withAuth()` middleware → verifies token → extracts userId → passes to handler
+- Token persists across page refreshes via localStorage
 
 ### Database Connection Pattern
 
-MongoDB connection uses global caching to prevent connection exhaustion in serverless:
+MongoDB connection with global caching prevents connection exhaustion in Next.js serverless functions:
 
-- **`lib/mongodb.ts`** exports `connectDB()` with global connection caching
-- Connection persists via `global.mongoose` between hot reloads
-- Call `await connectDB()` before any database operation
+**Key Pattern** (`lib/mongodb.ts`):
+```typescript
+// Global cache persists between hot reloads
+global.mongoose = { conn: null, promise: null };
+
+async function connectDB() {
+  if (cached.conn) return cached.conn; // Reuse existing connection
+
+  cached.promise = mongoose.connect(MONGODB_URI, {
+    bufferCommands: false,
+    dbName: DB_NAME
+  });
+
+  return await cached.promise;
+}
+```
+
+**Usage**: Call `await connectDB()` at the start of every API route that touches the database.
+
+**Model Pattern** (`models/User.ts`):
+```typescript
+// Prevent model recompilation during dev hot reload
+const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+```
 
 ### Component Architecture
 
+**Path Aliases** (`tsconfig.json`):
+- `@/*` maps to root directory (use `@/components`, `@/lib`, `@/hooks`)
+- Configured in both `tsconfig.json` and `components.json`
+
 **Shadcn/ui Configuration** (`components.json`):
-- Path aliases: `@/components`, `@/lib`, `@/hooks`
-- Components use composition pattern with Radix UI primitives
-- Server Components by default; Client Components marked with "use client"
+- Style: "new-york" variant with Radix UI primitives
+- Base color: "neutral" with OKLCH color space
+- Icon library: lucide-react
+- 30+ components in `components/ui/`
 
-**Layout Pattern** (Sidebar-based dashboard):
-- `SidebarProvider` → wraps dashboard for global sidebar state
-- `AppSidebar` → collapsible navigation (contains sample data to replace)
-- `SidebarInset` → main content area with header/breadcrumbs
-- Navigation components (`nav-main`, `nav-projects`, `nav-user`) → modular sidebar sections
+**Layout Pattern** (Sidebar Dashboard):
+```
+<SidebarProvider>  ← Global sidebar state
+  <AppSidebar>     ← Collapsible navigation (contains sample data to replace)
+    <NavMain>      ← Main navigation links
+    <NavProjects>  ← Project/workspace switcher
+    <NavUser>      ← User profile dropdown
+  </AppSidebar>
+  <SidebarInset>   ← Main content area with header/breadcrumbs
+    {children}
+  </SidebarInset>
+</SidebarProvider>
+```
 
-**Theming** (Tailwind CSS 4 + CSS variables):
-- OKLCH color space defined in `app/globals.css`
-- Dark/light mode via `next-themes` with CSS variables
-- Component variants using `class-variance-authority`
+**Component Types**:
+- Server Components by default (no "use client" directive)
+- Client Components require "use client" at top (for hooks, event handlers, browser APIs)
+- Use composition over prop drilling
+
+**Theming** (`app/globals.css`):
+- CSS variables for colors in OKLCH space (better perceptual uniformity)
+- Dark/light mode via `next-themes` with automatic system preference detection
+- Component variants via `class-variance-authority` (cva)
 
 ### Key Files to Customize
 
-**Replace sample data in**:
-- `components/app-sidebar.tsx` - Navigation data object
-- `components/dashboard-example/page.tsx` - Dashboard sample data
+**Sample Data to Replace**:
+- `components/app-sidebar.tsx` - Navigation/teams/projects data object (lines 10-50)
 - `components/{nav-main,nav-projects,nav-user,team-switcher}.tsx` - Placeholder URLs
+- `components/dashboard-example/` - Sample dashboard with mock data
 
-**Keep as-is**:
-- `components/ui/*` - Shadcn/ui component library (30+ components)
+**Configuration Files**:
+- `next.config.ts` - TypeScript build errors ignored for dev (`typescript.ignoreBuildErrors: true`)
+- `.env.local` - Copy from `.env.example`, set MONGODB_URI, JWT_SECRET, DB_NAME
+- `app/globals.css` - CSS variables for theming (modify for brand colors)
 
-**Configuration**:
-- `next.config.ts` - Build errors ignored for dev (enable for production)
-- `.env.example` - Required: MONGODB_URI, JWT_SECRET, DB_NAME
+**Do Not Modify**:
+- `components/ui/*` - Shadcn/ui component library (managed via CLI)
 
-## Tech Stack Overview
+## Tech Stack
 
-**Package Manager**: npm (use `npm install` not yarn/pnpm)
+**Package Manager**: npm (not yarn/pnpm)
 
-**Key Dependencies**:
-- **UI**: 30+ shadcn/ui components (Radix UI primitives), lucide-react icons, recharts, @tanstack/react-table
-- **Forms**: react-hook-form + zod validation
-- **Interactions**: @dnd-kit (drag-and-drop), react-resizable-panels
+**Core Dependencies**:
+- **Framework**: Next.js 16.0, React 19.2, TypeScript 5.9
+- **Database**: mongoose (MongoDB ODM)
 - **Auth**: jsonwebtoken, bcryptjs
-- **Database**: mongoose
-- **Theming**: next-themes, tailwindcss (OKLCH color space)
-- **Notifications**: sonner (toast notifications)
+- **UI**: 30+ shadcn/ui components, lucide-react icons, @tabler/icons-react
+- **Forms**: react-hook-form + zod validation
+- **Tables**: @tanstack/react-table with sorting/filtering
+- **Charts**: recharts (built on D3)
+- **Interactions**: @dnd-kit (drag-drop), react-resizable-panels
+- **Styling**: Tailwind CSS 4, next-themes, class-variance-authority
+- **Notifications**: sonner (toast library)
 
-**Custom Hooks**:
-- `useAuth()` - Auth state (user, login, logout) from AuthContext
-- `useSidebar()` - Sidebar state from SidebarProvider
+**Key Hooks**:
+- `useAuth()` - Auth state (user, login, logout, loading)
+- `useSidebar()` - Sidebar state (open, setOpen, toggleSidebar)
 - `useIsMobile()` - Mobile viewport detection
 
 ## Development Patterns
 
-**TypeScript**: Strict mode enabled. Type all parameters and return values. Avoid `any`.
+**TypeScript**:
+- Strict mode enabled (no implicit any)
+- Type all function parameters and return values
+- Extend interfaces for Mongoose documents: `interface IUser extends Document`
 
-**Styling**: Tailwind utilities + semantic CSS variables. Use `cn()` helper for conditional classes.
+**Styling**:
+- Use Tailwind utility classes
+- Use `cn()` helper from `@/lib/utils` for conditional classes
+- Use CSS variables for theme colors (e.g., `bg-background`, `text-foreground`)
 
-**Component Pattern**: Server Components default. Mark Client Components with "use client". Use composition over prop drilling.
+**Forms**:
+- Use react-hook-form with zod validation
+- Example: `const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema) })`
 
-**State Management**: React Context for global state (auth, sidebar). React Hook Form for form state.
+**State Management**:
+- React Context for global state (auth, sidebar)
+- React Hook Form for form state
+- URL search params for shareable state
 
-**Image Sources**:
-- External images configured in `next.config.ts` for Pexels API
-- Use `api-integration-specialist` for Unsplash/Pexels integration
+**Error Handling**:
+- API routes return consistent JSON error format: `{ error: string }`
+- Client displays errors via sonner toast: `toast.error(message)`
+
+## Saudi Arabia Application Context
+
+This template is designed for the Saudi Arabian market. Consider these defaults:
+
+- **Currency**: Saudi Riyal (SAR) - `new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR' })`
+- **Locale**: Arabic (ar-SA) primary, English secondary
+- **RTL Support**: Use `dir="rtl"` in layout for Arabic content
+- **Phone Format**: Saudi format (+966) - `/^(\+966|966|05)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/`
+- **Date/Time**: Consider Hijri calendar support where appropriate
+- **Payments**: Mada, STC Pay, Apple Pay, Visa/Mastercard
+- **Work Week**: Sunday-Thursday (not Monday-Friday)
+
+## Claude Code Skills & Agents
+
+This template includes specialized skills and agents in `.claude/`:
+
+**Skills** (invoke with `/skill-name`):
+- `error-checking` - Verify no runtime errors after changes
+- `pexels-images` - Fetch contextually accurate images from Pexels API
+- `nextjs-template-skill` - Template-specific components and patterns
+
+**Agents** (auto-invoked based on task context):
+- `ui-design-specialist` - UI/UX design, shadcn/ui components, layouts
+- `auth-specialist` - JWT auth, protected routes, session management
+- `database-specialist` - MongoDB schemas, queries, aggregations
+- `api-integration-specialist` - External APIs, webhooks, file uploads
+- `ai-apps-developer` - Open Router API, streaming, chat interfaces
+- `quality-specialist` - Code review, security audits, testing
+
+Agents have detailed instructions in `.claude/agents/*.md` for their specific domains.
+
+## Environment Variables
+
+Required variables (see `.env.example`):
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `MONGODB_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/` |
+| `DB_NAME` | Database name | `etlaq_auth` |
+| `JWT_SECRET` | Secret for JWT signing (32+ chars) | Generate: `openssl rand -base64 32` |
+| `NEXT_PUBLIC_API_URL` | API base URL | `http://localhost:3000` (dev) |
+| `PEXELS_API_KEY` | Optional: Pexels image API | Get at pexels.com/api |
+| `OPEN_ROUTER_API_KEY` | Optional: AI model API | Get at openrouter.ai |
+
+Copy `.env.example` to `.env.local` and fill in your values.

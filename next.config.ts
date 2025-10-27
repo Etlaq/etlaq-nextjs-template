@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // TEMPLATE NOTE: These are disabled for faster development iteration
-  // For production builds, consider enabling these to catch errors early:
-  // eslint: { ignoreDuringBuilds: false },
-  // typescript: { ignoreBuildErrors: false },
-  eslint: { ignoreDuringBuilds: true },
+  // TEMPLATE NOTE: TypeScript errors are ignored for faster development iteration
+  // For production builds, consider enabling: typescript: { ignoreBuildErrors: false }
+  // Note: eslint configuration is now managed via eslint.config.js (deprecated in next.config)
   typescript: { ignoreBuildErrors: true },
 
   // Allow external images from Pexels API
