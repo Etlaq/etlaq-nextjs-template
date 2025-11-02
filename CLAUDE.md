@@ -14,6 +14,120 @@ npm start         # Start production
 npm run lint      # Run linting
 ```
 
+## 🚨 CRITICAL: Installing Dependencies
+
+**ALWAYS use Bun and restart the server after installing packages:**
+
+```bash
+# Install a new package
+bun add <package-name>
+
+# Then IMMEDIATELY restart the dev server
+/usr/local/bin/restart-dev-server.sh
+```
+
+**Why?**
+- The dev server auto-starts on container boot
+- New dependencies require a server restart to be loaded
+- The restart script uses SIGHUP signal to gracefully restart without killing code-server
+
+**Examples**:
+```bash
+# Install single package
+bun add lodash
+/usr/local/bin/restart-dev-server.sh
+
+# Install dev dependency
+bun add -d @types/lodash
+/usr/local/bin/restart-dev-server.sh
+
+# Install multiple packages
+bun add axios react-query
+/usr/local/bin/restart-dev-server.sh
+
+# Install all dependencies (if package.json changed)
+bun install
+/usr/local/bin/restart-dev-server.sh
+```
+
+**What restart does**:
+1. Kills all Next.js/Bun dev processes (NOT code-server)
+2. Reinstalls dependencies with `bun install`
+3. Starts fresh dev server on port 3000
+4. Keeps code-server running (port 8585)
+
+**NEVER**:
+- ❌ Don't use `npm install` or `pnpm install` - use `bun add` or `bun install`
+- ❌ Don't manually start the dev server - it auto-starts and auto-restarts
+- ❌ Don't forget to restart after adding dependencies
+
+## 📊 Server Logs & Monitoring
+
+The dev server maintains two log files for different purposes:
+
+### Log Files
+
+**Rotating Log** (Quick View - Last 50 Lines):
+```bash
+tail -f server.log
+# or
+cat server.log
+```
+- **Location**: `./server.log` (project root)
+- **Size**: Automatically limited to last 50 lines
+- **Purpose**: Quick status checks, recent activity
+- **Updates**: Real-time as server runs
+
+**Permanent Log** (Full History):
+```bash
+tail -f server-perm.log
+# or
+cat server-perm.log
+```
+- **Location**: `./server-perm.log` (project root)
+- **Size**: Never truncated, grows indefinitely
+- **Purpose**: Full audit trail, debugging historical issues
+- **Includes**: Timestamps for server starts/restarts
+
+### Log Markers
+
+Logs include visual markers for easy navigation:
+- `━━━━ SERVER STARTED - HH:MM:SS ━━━━` - Server boot
+- `🔄 SERVER RESTARTED - YYYY-MM-DD HH:MM:SS UTC` - Manual/dependency restart
+
+### Monitoring Best Practices
+
+**During Development**:
+```bash
+# Watch recent activity
+tail -f server.log
+
+# Search for errors
+grep -i error server-perm.log
+
+# Check last restart
+grep "RESTARTED" server-perm.log | tail -1
+```
+
+**Troubleshooting**:
+```bash
+# If server isn't responding
+ps aux | grep "bun dev"  # Check if running
+
+# If port conflict
+lsof -i :3000  # See what's using the port
+
+# Force restart
+/usr/local/bin/restart-dev-server.sh
+```
+
+### Log Rotation Details
+
+- **Rotating log**: Uses `tail -n 50` after each write
+- **Permanent log**: Appends only, never truncated
+- **Both logs**: Updated in real-time via log-wrapper.sh
+- **Restart behavior**: Adds timestamp marker, preserves history
+
 ## Critical Patterns
 
 ### Auth (JWT, 7-day expiry)
