@@ -131,88 +131,32 @@ text-sm text-neutral-600  // Muted
 
 ## Image Sourcing
 
-### Context Disambiguation
-| Term | Context → Meaning |
-|------|-------------------|
-| Dates | Food site → fruit, Dating app → romantic, Calendar → time |
-| Apple | Tech → company, Food → fruit |
-| Python | Dev → language, Nature → snake |
+**IMPORTANT**: For professional stock images with Saudi Arabia context, use the **image-specialist** agent.
 
-### Pexels API (Primary - Professional Stock Photos)
+The image-specialist agent:
+- Fetches contextually accurate images from multiple sources (Pexels, Unsplash, Pixabay, web search)
+- Specializes in Saudi Arabian market appropriateness
+- Uses single-word queries for 95% success rate with APIs
+- Provides ready-to-use Next.js Image code with CDN URLs
+- Handles cultural filtering and proper attribution
+- Can search web for Saudi-specific imagery when needed
 
-**Quick Reference**
-```bash
-API_KEY: Sd9Donnm80Sdw3iBPISdo6d1oCCg7ZwmOrcgv8W1BLyZaidJYOJCxLjb
-Base URL: https://api.pexels.com/v1
-Rate Limit: 200/hour, 20,000/month
-```
+**When to use image-specialist**:
+- Hero images for landing pages
+- Gallery/portfolio images
+- Contextual illustrations for features
+- Culturally appropriate imagery for Saudi market
 
-**Server-Side Fetch (API Route)**
-```typescript
-// app/api/images/route.ts
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get('query') || 'technology';
-
-  const res = await fetch(
-    `https://api.pexels.com/v1/search?query=${query}&per_page=15`,
-    {
-      headers: {
-        Authorization: 'Sd9Donnm80Sdw3iBPISdo6d1oCCg7ZwmOrcgv8W1BLyZaidJYOJCxLjb',
-      },
-    }
-  );
-
-  return Response.json(await res.json());
-}
-```
-
-**Direct Image URLs (No Download Needed)**
+**Quick integration code** (after getting images from agent):
 ```tsx
-// Pexels returns direct CDN URLs - use them directly in Next.js Image
-interface PexelsPhoto {
-  id: number;
-  src: {
-    original: string;    // Full size
-    large: string;       // 940w (recommended)
-    medium: string;      // 350h
-    small: string;       // 130h
-    landscape: string;   // 1200x627
-    portrait: string;    // 800x1200
-  };
-  alt: string;
-  photographer: string;
-  photographer_url: string;
-}
-
-// Usage in component
+// Direct CDN URLs from Pexels
 <Image
-  src={photo.src.large}  // Use Pexels CDN URL directly
-  alt={photo.alt || 'Modern workspace'}
+  src="https://images.pexels.com/photos/[id]/pexels-photo-[id].jpeg"
+  alt="Contextual alt text"
   width={940}
   height={650}
   className="object-cover rounded-lg"
 />
-
-// Attribution (required)
-<a href={photo.photographer_url} className="text-xs text-neutral-600">
-  Photo by {photo.photographer}
-</a>
-```
-
-**Common Categories**
-```bash
-# Business/Tech
-technology, office, workspace, laptop, modern, business, team
-
-# Lifestyle
-lifestyle, people, portrait, family, fitness, wellness
-
-# Nature/Travel
-nature, landscape, mountains, ocean, city, architecture
-
-# Food/Product
-food, restaurant, product, minimal, coffee, shopping
 ```
 
 **Next.js Image Config** (add to next.config.ts)
@@ -227,9 +171,9 @@ images: {
 }
 ```
 
-### Fallback Sources
+### Fallback Sources (Development Only)
 ```bash
-# Lorem Picsum (development placeholders)
+# Lorem Picsum (placeholders)
 https://picsum.photos/800/600
 
 # UI Avatars (user profiles)

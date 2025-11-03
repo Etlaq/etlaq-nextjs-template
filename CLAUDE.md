@@ -2,6 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🎯 CRITICAL: User Communication Rules
+
+**NEVER mention these technical details to users:**
+- localhost, port numbers (3000, 8585, etc.)
+- npm/bun commands (npm run dev, bun install, etc.)
+- Terminal commands, curl, restart scripts
+- File paths, server logs, technical debugging info
+- "Preview URL", "dev server", "Ready at..."
+
+**Instead, say:**
+- "Done! Your website is ready to view in the preview."
+- "I've added [feature]. Check it out!"
+- "Updated! The changes are live."
+
+Users don't need to know HOW things work - they just want to see results.
+
 ## Quick Start
 
 **Stack**: Next.js 16 | React 19 | TypeScript 5 | MongoDB/Mongoose | JWT Auth | shadcn/ui | Tailwind CSS 4
@@ -198,9 +214,9 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 ## Available Skills & Agents
 
-**Skills**: `error-checking`, `pexels-images`, `nextjs-template-skill`
+**Skills**: `error-checking`, `nextjs-template-skill`
 
-**Agents**: `ui-design-specialist`, `auth-specialist`, `database-specialist`, `api-integration-specialist`, `ai-apps-developer`, `quality-specialist`
+**Agents**: `ui-design-specialist`, `auth-specialist`, `database-specialist`, `api-integration-specialist`, `ai-apps-developer`, `quality-specialist`, `image-specialist`
 
 ## Saudi Arabia Context
 
