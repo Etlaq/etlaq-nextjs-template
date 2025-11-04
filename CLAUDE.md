@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **NEVER mention these technical details to users:**
 - localhost, port numbers (3000, 8585, etc.)
 - npm/bun commands (npm run dev, bun install, etc.)
-- Terminal commands, curl, restart scripts
+- Terminal commands, wget, restart scripts
 - File paths, server logs, technical debugging info
 - "Preview URL", "dev server", "Ready at..."
 
