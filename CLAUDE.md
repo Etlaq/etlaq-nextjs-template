@@ -150,19 +150,6 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 - **Errors**: Return `{ error: string }`, display via `toast.error()`
 - **No tests**: Testing not configured (consider adding Jest/Vitest)
 - try to get things done as fast as possible
-- support arabic as the default language.
+- Website should be arabic as no.1 language and add English as 2nd language
 - when developing the application, your progress todolist should be simple for non technical users
-
-## E2B Sandbox Environment
-
-**View dev server logs**:
-```bash
-tail -f /workspace/dev-server.log
-```
-
-**Restart dev server**:
-```bash
-pkill -f "bun dev"
-cd /workspace/etlaq-nextjs-template
-bun dev --port 3000 --hostname 0.0.0.0 >> /workspace/dev-server.log 2>&1 &
-```
+- Use IBM Plex Sans Arabic and IBM Plex Sans as default fonts 
