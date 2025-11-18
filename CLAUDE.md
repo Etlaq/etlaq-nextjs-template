@@ -2,12 +2,52 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🎯 Critical Project Requirements
 
-Use port 3001 for debugging, and use Bunjs for bun run dev
+### Development Philosophy
+- Get things running ASAP - no need to test for simple things
+- Try to get things done as fast as possible
+- Follow existing patterns in the codebase
+
+### Language & Localization (Arabic-First)
+- **Primary language**: Arabic (العربية)
+- **Secondary language**: English
+- **RTL support**: Use `dir="rtl"` for Arabic content
+- **Fonts**: IBM Plex Sans Arabic (Arabic) and IBM Plex Sans (English) as default fonts unless specified otherwise
+- **Currency**: SAR (use `ar-SA` locale)
+- **Phone format**: +966 validation
+- **Work week**: Sunday-Thursday
+
+### User Communication
+- **Todo lists**: Write in Arabic, simple for non-technical users
+- **Progress updates**: Keep concise and user-friendly
 
 ## Quick Start
 
 **Stack**: Next.js 16 | React 19 | TypeScript 5 | MongoDB/Mongoose | JWT Auth | shadcn/ui | Tailwind CSS 4
+
+**Commands**:
+```bash
+bun run dev       # Start dev with Turbopack (port 3000)
+bun run build     # Build for production
+bun start         # Start production server
+bun run lint      # Run ESLint
+```
+
+## 🚨 Installing Dependencies
+
+**ALWAYS use Bun for package management**:
+
+```bash
+# Install a package
+bun add <package-name>
+
+# Install dev dependency
+bun add -d <package-name>
+
+# Install all dependencies
+bun install
+```
 
 
 ## Critical Patterns
@@ -90,11 +130,17 @@ return Response.json({ error: "Descriptive message" }, { status: 400 });
 - **UI Components**: `components/ui/*`, `app/globals.css`
 - **Config**: `.env.local`, `next.config.ts`, `components.json`
 
-## Replace Sample Data
+## Template Customization
 
+### Replace Sample Data
 - `components/app-sidebar.tsx` - Navigation items (lines 10-50)
 - `components/{nav-main,nav-projects,nav-user,team-switcher}.tsx` - URLs
 - `components/dashboard-example/` - Mock dashboard data
+
+### Update Branding
+- Replace placeholder text with Arabic/English content
+- Update navigation labels for bilingual support
+- Customize theme colors in `app/globals.css`
 
 ## Environment Variables
 
@@ -123,29 +169,30 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 - Modify `components/ui/*` files
 - Ignore TypeScript errors in production builds
 
+## Key Architecture Notes
+
+### TypeScript & Build
+- **Strict mode**: Enabled
+- **Dev mode**: Build errors ignored (fast iteration)
+- **Production**: Fix all TypeScript errors before deploying
+
+### State Management
+- **Auth state**: JWT in localStorage (auto-persisted)
+- **DB connections**: Global cache prevents serverless exhaustion
+- **Forms**: react-hook-form + zod validation
+
+### UI Patterns
+- **Layout**: SidebarProvider → AppSidebar + SidebarInset
+- **Theming**: OKLCH CSS variables
+- **Error handling**: Return `{ error: string }`, display via `toast.error()`
+- **Components**: Server components by default, add `"use client"` only when needed
+
+### Testing
+- **Current state**: Testing not configured
+- **Future**: Consider adding Jest/Vitest if needed
+
 ## Available Skills & Agents
 
 **Skills**: `error-checking`, `nextjs-template-skill`
 
 **Agents**: `ui-design-specialist`, `auth-specialist`, `database-specialist`, `api-integration-specialist`, `ai-apps-developer`, `quality-specialist`, `image-specialist`
-
-## Saudi Arabia Context
-
-- Currency: SAR (use `ar-SA` locale)
-- RTL support: `dir="rtl"` for Arabic
-- Phone format: +966 validation
-- Work week: Sunday-Thursday
-
-## Key Architecture Notes
-
-- **TypeScript**: Strict mode enabled, build errors ignored in dev
-- **Global DB cache**: Prevents serverless connection exhaustion
-- **JWT in localStorage**: Auto-persisted client-side auth
-- **Sidebar layout**: SidebarProvider → AppSidebar + SidebarInset
-- **Forms**: react-hook-form + zod validation
-- **Errors**: Return `{ error: string }`, display via `toast.error()`
-- **No tests**: Testing not configured (consider adding Jest/Vitest)
-- try to get things done as fast as possible
-- Website should be arabic as no.1 language and add English as 2nd language
-- when developing the application, your progress todolist should be simple for non technical users and write it in Arabic
-- Use IBM Plex Sans Arabic and IBM Plex Sans as default fonts  unless specified other or it is wise to use another
