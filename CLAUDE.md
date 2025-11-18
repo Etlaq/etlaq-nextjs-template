@@ -2,17 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+
+Use port 3001 for debugging, and use Bunjs for bun run dev
+
 ## Quick Start
 
 **Stack**: Next.js 16 | React 19 | TypeScript 5 | MongoDB/Mongoose | JWT Auth | shadcn/ui | Tailwind CSS 4
 
-**Commands**:
-```bash
-npm run dev       # Start dev with Turbopack (port 3000)
-npm run build     # Build for production
-npm start         # Start production server
-npm run lint      # Run ESLint
-```
 
 ## Critical Patterns
 
@@ -151,5 +147,5 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 - **No tests**: Testing not configured (consider adding Jest/Vitest)
 - try to get things done as fast as possible
 - Website should be arabic as no.1 language and add English as 2nd language
-- when developing the application, your progress todolist should be simple for non technical users
-- Use IBM Plex Sans Arabic and IBM Plex Sans as default fonts 
+- when developing the application, your progress todolist should be simple for non technical users and write it in Arabic
+- Use IBM Plex Sans Arabic and IBM Plex Sans as default fonts  unless specified other or it is wise to use another
