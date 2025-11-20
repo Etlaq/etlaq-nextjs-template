@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 🎯 Critical Project Requirements
 
 ### Development Philosophy
-- Get things running ASAP - no need to test for simple things
+- Get things running ASAP - no need to test as it will take time (i.e. curl the homepage)
 - Try to get things done as fast as possible
 - Follow existing patterns in the codebase
 
