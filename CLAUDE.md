@@ -2,14 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 🎯 Critical Project Requirements
+## Development Philosophy
 
-### Development Philosophy
 - Get things running ASAP - no need to test as it will take time (i.e. curl the homepage)
 - Try to get things done as fast as possible
 - Follow existing patterns in the codebase
 
-### Language & Localization (Arabic-First)
+## Language & Localization (Arabic-First)
+
 - **Primary language**: Arabic (العربية)
 - **Secondary language**: English
 - **RTL support**: Use `dir="rtl"` for Arabic content
@@ -18,181 +18,121 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Phone format**: +966 validation
 - **Work week**: Sunday-Thursday
 
-### User Communication
+## User Communication
+
 - **Todo lists**: Write in Arabic, simple for non-technical users
 - **Progress updates**: Keep concise and user-friendly
 
-## Quick Start
-
-**Stack**: Next.js 16 | React 19 | TypeScript 5 | MongoDB/Mongoose | JWT Auth | shadcn/ui | Tailwind CSS 4
-
-**Commands**:
-```bash
-bun run dev       # Start dev with Turbopack (port 3000)
-bun run build     # Build for production
-bun start         # Start production server
-bun run lint      # Run ESLint
-```
-
-## 🚨 Installing Dependencies
-
-**ALWAYS use Bun for package management**:
+## Commands
 
 ```bash
-# Install a package
-bun add <package-name>
+# Development (uses Turbopack)
+bun dev
 
-# Install dev dependency
-bun add -d <package-name>
+# Production build
+bun run build
+bun start
 
-# Install all dependencies
-bun install
+# Linting
+bun lint
 ```
-
-
-## Critical Patterns
-
-### Auth (JWT, 7-day expiry)
-```typescript
-// Protected API route
-import { withAuth } from '@/lib/middleware';
-export const GET = withAuth(async (request, userId) => { /* ... */ });
-
-// Client-side
-import { useAuth } from '@/contexts/AuthContext';
-const { user, token, login, register, logout } = useAuth();
-```
-
-### Database (MongoDB)
-```typescript
-import connectDB from '@/lib/mongodb';
-await connectDB(); // ALWAYS call at start of API routes
-
-// Prevent re-compilation
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
-```
-
-### Components
-- **Path aliases**: Use `@/components`, `@/lib`, `@/hooks` (not `../`)
-- **Server by default**: Add `"use client"` only for hooks/events
-- **shadcn/ui**: 30+ components in `components/ui/` (don't modify)
-- **Theming**: OKLCH CSS variables (`bg-background`, `text-foreground`)
-- **Conditionals**: `cn()` from `@/lib/utils`
 
 ## Architecture
 
+### Tech Stack
+- **Framework**: Next.js 16 with App Router (React 19)
+- **Database**: MongoDB with Mongoose ODM
+- **Auth**: JWT (bcryptjs + jsonwebtoken) with 7-day token expiration
+- **Styling**: Tailwind CSS 4 with OKLCH color system
+- **UI**: 30+ shadcn/ui components (New York style) in `components/ui/`
+- **Animations**: Motion library (`motion/react`)
+
+### Project Structure
 ```
-app/
-├── api/
-│   ├── auth/           # register, login, me endpoints
-│   └── protected/      # withAuth() wrapped routes
-├── (pages)            # Client pages with auth
-└── globals.css        # OKLCH theme variables
+app/                    # Next.js App Router
+├── api/auth/           # Auth endpoints (login, register, me)
+├── api/protected/      # Protected API routes
+├── login/              # Login page
+├── register/           # Registration page
+└── layout.tsx          # Root layout with AuthProvider
 
 lib/
-├── auth.ts            # JWT utilities, password hashing
-├── middleware.ts      # withAuth() wrapper
-└── mongodb.ts         # Global connection caching
+├── auth.ts             # JWT utilities (hash, verify, generate tokens)
+├── middleware.ts       # withAuth() HOF for protected routes
+├── mongodb.ts          # Mongoose connection with pooling
+└── utils.ts            # cn() utility for class merging
 
-models/               # Mongoose schemas
-components/
-├── ui/              # shadcn components (immutable)
-└── *                # Custom components
-
-contexts/            # AuthContext with useAuth()
+models/                 # Mongoose schemas
+contexts/AuthContext.tsx  # Client-side auth state
+components/ui/          # shadcn/ui components (DO NOT modify)
 ```
 
-## API Patterns
+### Authentication Flow
 
-**Auth Endpoints**:
-- `POST /api/auth/register` - Create user (email, password, name)
-- `POST /api/auth/login` - Get JWT token
-- `GET /api/auth/me` - Get current user (requires Bearer token)
+**Server-side** (API routes):
+```tsx
+import { withAuth } from '@/lib/middleware';
 
-**Protected Routes**:
-```typescript
-export const GET = withAuth(async (request, userId) => {
-    const user = await User.findById(userId);
-    return Response.json({ user });
+export const GET = withAuth(async (req, userId) => {
+  // userId extracted from JWT
+  return Response.json({ data: 'protected' });
 });
 ```
 
-**Error Responses**:
-```typescript
-return Response.json({ error: "Descriptive message" }, { status: 400 });
-// Client: toast.error(data.error)
+**Client-side**:
+```tsx
+'use client';
+import { useAuth } from '@/contexts/AuthContext';
+
+const { user, login, logout, loading } = useAuth();
 ```
 
-## Key File Locations
+### Path Aliases
+Always use `@/` imports:
+```tsx
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+```
 
-- **Auth**: `lib/auth.ts`, `lib/middleware.ts`, `contexts/AuthContext.tsx`, `app/api/auth/*`
-- **Database**: `lib/mongodb.ts`, `models/*.ts`
-- **UI Components**: `components/ui/*`, `app/globals.css`
-- **Config**: `.env.local`, `next.config.ts`, `components.json`
-
-## Template Customization
-
-### Replace Sample Data
-- `components/app-sidebar.tsx` - Navigation items (lines 10-50)
-- `components/{nav-main,nav-projects,nav-user,team-switcher}.tsx` - URLs
-- `components/dashboard-example/` - Mock dashboard data
-
-### Update Branding
-- Replace placeholder text with Arabic/English content
-- Update navigation labels for bilingual support
-- Customize theme colors in `app/globals.css`
-
-## Environment Variables
-
+### Environment Variables
 Required in `.env.local`:
-```env
-MONGODB_URI=mongodb+srv://...
-DB_NAME=your_database_name
-JWT_SECRET=32+_character_secret  # openssl rand -base64 32
-NEXT_PUBLIC_API_URL=http://localhost:3000
+- `MONGODB_URI` - MongoDB connection string
+- `DB_NAME` - Database name
+- `JWT_SECRET` - 32+ character secret for JWT
+- `NEXT_PUBLIC_API_URL` - API base URL
+
+### Component Patterns
+
+**Server Components** (default - no directive needed):
+```tsx
+export default function Page() {
+  return <div>Server-rendered</div>;
+}
 ```
 
-## Performance Tips
+**Client Components** (add directive for hooks/events):
+```tsx
+'use client';
+import { useState } from 'react';
+```
 
-**DO**:
-- Read files before creating new ones
-- Run parallel tool calls when possible
-- Use Edit tool over Write for existing files
-- Use specialized agents for complex tasks
-- Check server logs for runtime errors
-- Follow existing patterns in codebase
+**Conditional Classes** with cn():
+```tsx
+<div className={cn("base", isActive && "active")} />
+```
 
-**DON'T**:
-- Create unnecessary files or documentation
-- Run sequential commands that could be parallel
-- Use Bash for file operations (use Read/Edit/Write)
-- Modify `components/ui/*` files
-- Ignore TypeScript errors in production builds
+**RTL-safe Spacing** (use logical properties):
+```tsx
+<div className="ps-4 pe-2 ms-auto me-0">
+  {/* ps = padding-inline-start, pe = padding-inline-end */}
+</div>
+```
 
-## Key Architecture Notes
-
-### TypeScript & Build
-- **Strict mode**: Enabled
-- **Dev mode**: Build errors ignored (fast iteration)
-- **Production**: Fix all TypeScript errors before deploying
-
-### State Management
-- **Auth state**: JWT in localStorage (auto-persisted)
-- **DB connections**: Global cache prevents serverless exhaustion
-- **Forms**: react-hook-form + zod validation
-
-### UI Patterns
-- **Layout**: SidebarProvider → AppSidebar + SidebarInset
-- **Theming**: OKLCH CSS variables
-- **Error handling**: Return `{ error: string }`, display via `toast.error()`
-- **Components**: Server components by default, add `"use client"` only when needed
-
-### Testing
-- **Current state**: Testing not configured
-- **Future**: Consider adding Jest/Vitest if needed
-
-## Available Skills & Agents
-
-**Skills**: `error-checking`, `nextjs-template-skill`
-
-**Agents**: `ui-design-specialist`, `auth-specialist`, `database-specialist`, `api-integration-specialist`, `ai-apps-developer`, `quality-specialist`, `image-specialist`
+### Theming
+Uses OKLCH color variables in `globals.css`. Use semantic colors:
+```tsx
+<div className="bg-background text-foreground">
+  <button className="bg-primary text-primary-foreground" />
+  <p className="text-muted-foreground" />
+</div>
+```
