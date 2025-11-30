@@ -1,25 +1,24 @@
 # Etlaq Next.js Template
 
-A production-ready Next.js 15 template with JWT authentication, MongoDB integration, and a comprehensive UI component library. Built for rapid development of modern web applications.
+A production-ready Next.js 16 template with JWT authentication, MongoDB integration, and a comprehensive UI component library. Built for rapid development of modern web applications.
 
 ## ✨ Features
 
 - **🔐 Complete Authentication System** - JWT-based auth with bcryptjs password hashing, protected routes, and session management
 - **🗄️ MongoDB Integration** - Mongoose ORM with type-safe schemas and connection pooling
 - **🎨 30+ UI Components** - shadcn/ui component library (New York style) with Radix UI primitives
-- **🤖 AI-Powered Development** - 9 specialized Claude Code agents for common development tasks
-- **⚡ Modern Stack** - Next.js 15, React 19, TypeScript 5, Tailwind CSS 4
+- **🤖 AI-Powered Development** - Specialized Claude Code agents for common development tasks
+- **⚡ Modern Stack** - Next.js 16, React 19, TypeScript 5, Tailwind CSS 4
 - **🌓 Theme Support** - Dark/light mode with OKLCH color system
-- **📱 Responsive Design** - Mobile-first layouts with sidebar navigation
+- **📱 Responsive Design** - Mobile-first RTL-ready layouts with sidebar navigation
 - **🔧 Developer Experience** - Turbopack, hot reload, strict TypeScript, ESLint
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
+- Bun runtime (or Node.js 18+)
 - MongoDB database (local or Atlas)
-- npm package manager
 
 ### Installation
 
@@ -31,7 +30,7 @@ A production-ready Next.js 15 template with JWT authentication, MongoDB integrat
 
 2. **Install dependencies**
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Configure environment variables**
@@ -49,7 +48,7 @@ A production-ready Next.js 15 template with JWT authentication, MongoDB integrat
 
 4. **Start development server**
    ```bash
-   npm run dev
+   bun dev
    ```
 
 5. **Open your browser**
@@ -157,7 +156,7 @@ See `CLAUDE.md` → "When to Use Which Agent" for detailed task-to-agent mapping
 - Add new schemas following the `User.ts` pattern
 
 ### 3. Add Components
-- Install shadcn/ui components: `npx shadcn@latest add <component>`
+- Install shadcn/ui components: `bunx shadcn@latest add <component>`
 - Create custom components in `components/`
 - Use TypeScript interfaces for props
 
@@ -178,14 +177,14 @@ Replace or remove these as needed for your application.
 
 ```bash
 # Development
-npm run dev          # Start dev server with Turbopack
+bun dev              # Start dev server with Turbopack
 
 # Production
-npm run build        # Build for production
-npm start            # Start production server
+bun run build        # Build for production
+bun start            # Start production server
 
 # Code Quality
-npm run lint         # Run ESLint and type checking
+bun lint             # Run ESLint
 ```
 
 ## 📚 Environment Variables
@@ -210,7 +209,7 @@ Copy `.env.example` to `.env.local` and fill in your values.
 
 ### Other Platforms
 
-This template works on any platform that supports Next.js 15:
+This template works on any platform that supports Next.js 16:
 - Netlify
 - Railway
 - Render
