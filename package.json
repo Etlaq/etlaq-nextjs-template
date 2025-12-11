@@ -20,6 +20,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:grab": "bun run scripts/grab-server.ts & next dev --turbopack",
+    "grab-server": "bun run scripts/grab-server.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

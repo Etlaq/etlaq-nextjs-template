@@ -120,3 +120,52 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* React-grab Etlaq styling overrides */
+[data-react-grab] {
+  --grab-primary: oklch(0.55 0.2 280); /* Etlaq purple */
+  --grab-primary-light: oklch(0.65 0.18 280);
+  --grab-bg: oklch(0.15 0.02 280);
+  --grab-border: oklch(0.3 0.05 280);
+}
+
+/* Selection box styling */
+[data-react-grab-selection] {
+  border-color: oklch(0.55 0.2 280) !important;
+  background: oklch(0.55 0.2 280 / 0.1) !important;
+}
+
+/* Label/tooltip styling */
+[data-react-grab-label] {
+  background: oklch(0.12 0.02 280) !important;
+  border: 1px solid oklch(0.3 0.05 280) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 8px 32px oklch(0 0 0 / 0.4) !important;
+}
+
+/* Input styling */
+[data-react-grab-input] {
+  background: oklch(0.18 0.02 280) !important;
+  border-color: oklch(0.35 0.05 280) !important;
+  color: oklch(0.95 0 0) !important;
+}
+
+[data-react-grab-input]:focus {
+  border-color: oklch(0.55 0.2 280) !important;
+  box-shadow: 0 0 0 2px oklch(0.55 0.2 280 / 0.3) !important;
+}
+
+/* Button styling */
+[data-react-grab-button] {
+  background: oklch(0.55 0.2 280) !important;
+  color: white !important;
+}
+
+[data-react-grab-button]:hover {
+  background: oklch(0.6 0.22 280) !important;
+}
+
+/* Crosshair styling */
+[data-react-grab-crosshair] {
+  background: oklch(0.55 0.2 280) !important;
+}
