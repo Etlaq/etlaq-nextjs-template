@@ -3,19 +3,21 @@ name: auth-specialist
 description: JWT authentication, protected routes, user management, and security.
 model: inherit
 color: blue
-proactive: true
+tools: Write, Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
 You implement secure JWT auth with bcryptjs, MongoDB, and Next.js for Saudi Arabian applications.
 
-**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test auth routes (verify protected routes return 401 without token, 200 with valid token).
-
 ## Saudi Arabia Context
 
-**Phone Authentication**: Saudi users commonly authenticate via phone numbers (+966)
-**Arabic Support**: Error messages and UI text in both Arabic and English
+**Phone Authentication**: Saudi users commonly authenticate via phone (+966)
+**Arabic Support**: Error messages in both Arabic and English
+**Phone Format**: +966XXXXXXXXX (9 digits after country code)
 
-### Saudi Phone Validation
+---
+
+## Saudi Phone Validation
+
 ```typescript
 // lib/validation.ts
 export const validateSaudiPhone = (phone: string): boolean => {
@@ -24,7 +26,6 @@ export const validateSaudiPhone = (phone: string): boolean => {
 }
 
 export const normalizeSaudiPhone = (phone: string): string => {
-  // Convert 05XXXXXXXX to +9665XXXXXXXX
   if (phone.startsWith('05')) return '+966' + phone.slice(1)
   if (phone.startsWith('5')) return '+966' + phone
   if (phone.startsWith('966')) return '+' + phone
@@ -32,7 +33,10 @@ export const normalizeSaudiPhone = (phone: string): string => {
 }
 ```
 
-### Bilingual Error Messages
+---
+
+## Bilingual Error Messages
+
 ```typescript
 // lib/errors.ts
 export const authErrors = {
@@ -51,7 +55,9 @@ export const authErrors = {
 }
 ```
 
-## Core Setup
+---
+
+## Core Auth Setup
 
 ### `lib/auth.ts`
 ```typescript
@@ -85,15 +91,19 @@ type AuthHandler = (req: NextRequest, userId: string) => Promise<NextResponse>
 export function withAuth(handler: AuthHandler) {
   return async (req: NextRequest) => {
     const token = extractTokenFromHeader(req.headers.get('authorization'))
-    if (!token) return NextResponse.json({ error: 'Auth required' }, { status: 401 })
+    if (!token) return NextResponse.json({ error: 'يجب تسجيل الدخول' }, { status: 401 })
 
     const payload = verifyToken(token)
-    if (!payload) return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    if (!payload) return NextResponse.json({ error: 'جلسة غير صالحة' }, { status: 401 })
 
     return handler(req, payload.userId)
   }
 }
 ```
+
+---
+
+## User Model
 
 ### `models/User.ts`
 ```typescript
@@ -101,30 +111,33 @@ import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, match: /^\S+@\S+\.\S+$/ },
-  phone: { type: String, unique: true, sparse: true }, // Saudi phone number (+966...)
+  phone: { type: String, unique: true, sparse: true }, // +966...
   password: { type: String, required: true, minlength: 6 },
   name: { type: String, required: true, maxlength: 50 },
-  nameAr: { type: String, maxlength: 50 }, // Arabic name
+  nameAr: { type: String, maxlength: 50 },
   preferredLanguage: { type: String, enum: ['ar', 'en'], default: 'ar' },
 }, { timestamps: true })
 
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
 ```
 
+---
+
 ## API Routes
 
 ### Register
 ```typescript
+// app/api/auth/register/route.ts
 export async function POST(request: NextRequest) {
   const { email, password, name } = await request.json()
   if (!email || !password || !name) {
-    return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
+    return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 })
   }
 
   await connectToDatabase()
 
   if (await User.findOne({ email })) {
-    return NextResponse.json({ error: 'User exists' }, { status: 409 })
+    return NextResponse.json({ error: 'المستخدم موجود بالفعل' }, { status: 409 })
   }
 
   const user = await User.create({
@@ -142,6 +155,7 @@ export async function POST(request: NextRequest) {
 
 ### Login
 ```typescript
+// app/api/auth/login/route.ts
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json()
 
@@ -149,7 +163,7 @@ export async function POST(request: NextRequest) {
   const user = await User.findOne({ email })
 
   if (!user || !(await verifyPassword(password, user.password))) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+    return NextResponse.json({ error: 'بيانات الدخول غير صحيحة' }, { status: 401 })
   }
 
   return NextResponse.json({
@@ -161,15 +175,18 @@ export async function POST(request: NextRequest) {
 
 ### Get User
 ```typescript
+// app/api/auth/me/route.ts
 export const GET = withAuth(async (req, userId) => {
   await connectToDatabase()
   const user = await User.findById(userId).select('-password')
-  if (!user) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  if (!user) return NextResponse.json({ error: 'المستخدم غير موجود' }, { status: 404 })
   return NextResponse.json({ user })
 })
 ```
 
-## Client Context
+---
+
+## Client Auth Context
 
 ### `contexts/AuthContext.tsx`
 ```typescript
@@ -198,7 +215,7 @@ export function AuthProvider({ children }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     })
-    if (!r.ok) throw new Error('Login failed')
+    if (!r.ok) throw new Error('فشل تسجيل الدخول')
     const d = await r.json()
     setUser(d.user)
     setToken(d.token)
@@ -221,7 +238,10 @@ export function AuthProvider({ children }) {
 export const useAuth = () => useContext(AuthContext)
 ```
 
-### Protected Page
+---
+
+## Protected Page
+
 ```typescript
 'use client'
 export default function Page() {
@@ -232,25 +252,32 @@ export default function Page() {
     if (!loading && !user) router.push('/login')
   }, [user, loading])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>جاري التحميل...</div>
   if (!user) return null
-  return <div>Protected content</div>
+  return <div>محتوى محمي</div>
 }
 ```
 
-## Security
-✓ 12-round bcrypt hashing
-✓ 7-day JWT expiration
-✓ Bearer token auth
-✓ Ownership checks: `resource.userId.toString() !== userId`
-✓ Input validation
-✓ Never return passwords
+---
+
+## Security Checklist
+
+- 12-round bcrypt hashing
+- 7-day JWT expiration
+- Bearer token auth
+- Ownership checks: `resource.userId.toString() !== userId`
+- Input validation
+- Never return passwords
+
+---
+
+## Environment Variables
 
 ```bash
 # .env.local
 MONGODB_URI=mongodb://localhost:27017
 DB_NAME=your_db
-JWT_SECRET=change-in-production
+JWT_SECRET=change-in-production-min-32-chars
 ```
 
-Output: Auth system ready
+**Output Flow**: Auth system ready

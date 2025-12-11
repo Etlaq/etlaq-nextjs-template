@@ -3,33 +3,33 @@ name: ai-apps-developer
 description: AI-powered features, Open Router API, streaming responses, chat interfaces.
 model: inherit
 color: green
-proactive: true
+tools: Write, Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
 You build AI features with Open Router API and Next.js using streaming for better UX.
 
-**CRITICAL**: After ANY change, check `tail -n 50 ./server.log` for errors and curl test AI routes (verify streaming works and auth protection is enforced).
-
-## Model Setup
+## Model Configuration
 
 ```typescript
-// Use 20b for 99% of cases (fast, cost-effective)
+// Primary model (fast, cost-effective)
 const MODEL = "openai/gpt-oss-20b"
 
-// Use 120b only for complex reasoning (rare)
+// Complex reasoning (use sparingly)
 const MODEL_COMPLEX = "openai/gpt-oss-120b"
 
-// Provider routing (Groq is fastest, with fallbacks)
+// Provider routing (Groq fastest)
 const PROVIDER = {
   order: ['Groq', 'Novita/bf16', 'Chutes/bf16', 'DeepInfra/fp4'],
   allow_fallbacks: true,
 }
 ```
 
+---
+
 ## Streaming Chat API
 
 ```typescript
-// /api/ai/chat/route.ts
+// app/api/ai/chat/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { withAuth } from '@/lib/middleware'
 
@@ -65,6 +65,8 @@ export const POST = withAuth(async (req, userId) => {
   })
 })
 ```
+
+---
 
 ## Client Chat Component
 
@@ -135,7 +137,7 @@ export function AIChat() {
                     return updated
                   })
                 }
-              } catch (e) {
+              } catch {
                 // Skip invalid JSON
               }
             }
@@ -143,7 +145,7 @@ export function AIChat() {
         }
       }
     } catch {
-      toast.error('AI request failed')
+      toast.error('فشل الطلب')
       setMessages(prev => prev.slice(0, -1))
     } finally {
       setLoading(false)
@@ -154,17 +156,17 @@ export function AIChat() {
     <div className="flex flex-col h-[600px]">
       <div className="flex-1 overflow-y-auto space-y-4 p-4">
         {messages.map((msg, i) => (
-          <Card key={i} className={msg.role === 'user' ? 'ml-auto max-w-[80%]' : 'mr-auto max-w-[80%]'}>
+          <Card key={i} className={msg.role === 'user' ? 'ms-auto max-w-[80%]' : 'me-auto max-w-[80%]'}>
             <CardContent className="p-3">
               <p className="font-semibold text-sm mb-1">
-                {msg.role === 'user' ? 'You' : 'AI'}
+                {msg.role === 'user' ? 'أنت' : 'المساعد'}
               </p>
               <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
             </CardContent>
           </Card>
         ))}
         {loading && (
-          <Card className="mr-auto max-w-[80%]">
+          <Card className="me-auto max-w-[80%]">
             <CardContent className="p-3">
               <Loader2 className="h-4 w-4 animate-spin" />
             </CardContent>
@@ -177,11 +179,12 @@ export function AIChat() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
+            placeholder="اكتب رسالتك..."
             disabled={loading}
+            dir="rtl"
           />
           <Button type="submit" disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send'}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'إرسال'}
           </Button>
         </div>
       </form>
@@ -190,10 +193,12 @@ export function AIChat() {
 }
 ```
 
+---
+
 ## Non-Streaming Generation
 
 ```typescript
-// /api/ai/generate/route.ts
+// app/api/ai/generate/route.ts
 export const POST = withAuth(async (req, userId) => {
   const { prompt, maxTokens = 500 } = await req.json()
 
@@ -221,7 +226,9 @@ export const POST = withAuth(async (req, userId) => {
 })
 ```
 
-## Rate Limiting (Optional)
+---
+
+## Rate Limiting
 
 ```typescript
 import { rateLimit } from '@/lib/rate-limit'
@@ -229,20 +236,16 @@ import { rateLimit } from '@/lib/rate-limit'
 export const POST = withAuth(async (req, userId) => {
   // 10 requests per minute per user
   if (!rateLimit(`ai:${userId}`, 10, 60000)) {
-    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
+    return NextResponse.json({ error: 'تم تجاوز الحد المسموح' }, { status: 429 })
   }
 
   // Process AI request...
 })
 ```
 
-## Best Practices
-✓ Use 20b model (fast, cheap)
-✓ Enable streaming for better UX
-✓ Groq as primary provider
-✓ Allow fallbacks for reliability
-✓ Implement rate limiting
-✓ Protect with `withAuth`
+---
+
+## Environment Variables
 
 ```bash
 # .env.local
@@ -250,4 +253,17 @@ OPEN_ROUTER_API_KEY=...
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-Output: AI configured → Streaming enabled → Chat ready
+---
+
+## Best Practices
+
+- Use 20b model (fast, cheap)
+- Enable streaming for better UX
+- Groq as primary provider
+- Allow fallbacks for reliability
+- Implement rate limiting
+- Protect with `withAuth`
+- Use RTL-safe spacing (`ms-`, `me-`)
+- Arabic labels for Saudi market
+
+**Output Flow**: AI configured → Streaming enabled → Chat ready
