@@ -14,10 +14,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Language & Localization (Arabic-First)
 
-- **Primary language**: Arabic (العربية)
-- **Secondary language**: English
-- **RTL support**: Use `dir="rtl"` for Arabic content
-- **Fonts**: IBM Plex Sans Arabic (Arabic) and IBM Plex Sans (English) as default fonts unless specified otherwise
+- **Default language**: Saudi Arabic (العربية) - always start with Arabic only
+- **Additional languages**: Only add English or other translations if user explicitly requests
+- **RTL by default**: Use `dir="rtl"` and `lang="ar-SA"` on root element
+- **Fonts**: IBM Plex Sans Arabic as default; add IBM Plex Sans only when multilingual
 - **Currency**: SAR (use `ar-SA` locale)
 - **Phone format**: +966 validation
 - **Work week**: Sunday-Thursday
