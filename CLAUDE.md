@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Philosophy
 
 - **Theme setup first**: Before building any UI, configure the color scheme in `app/globals.css` (OKLCH variables in `:root` and `.dark`)
+- **Always support both modes**: Implement light AND dark mode with system detection (`prefers-color-scheme`)
 - **Use `/frontend-design` skill**: For all UI work, invoke the frontend-design skill which follows this design system
 - Get things running ASAP - no need to test as it will take time (i.e. curl the homepage)
 - Try to get things done as fast as possible
