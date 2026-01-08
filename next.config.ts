@@ -6,13 +6,29 @@ const nextConfig: NextConfig = {
   // Note: eslint configuration is now managed via eslint.config.js (deprecated in next.config)
   typescript: { ignoreBuildErrors: true },
 
-  // Allow external images from Pexels API
+  // Allow external images from common stock photo and CDN sources
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.pexels.com',
-      },
+      // Pexels
+      { protocol: 'https', hostname: 'images.pexels.com' },
+      // Unsplash
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'plus.unsplash.com' },
+      // Pixabay
+      { protocol: 'https', hostname: 'pixabay.com' },
+      { protocol: 'https', hostname: 'cdn.pixabay.com' },
+      // UI Avatars (for generated avatars)
+      { protocol: 'https', hostname: 'ui-avatars.com' },
+      // Cloudinary (common CDN)
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      // Imgur
+      { protocol: 'https', hostname: 'i.imgur.com' },
+      // Placeholder services
+      { protocol: 'https', hostname: 'picsum.photos' },
+      { protocol: 'https', hostname: 'placehold.co' },
+      // Gravatar
+      { protocol: 'https', hostname: 'www.gravatar.com' },
+      { protocol: 'https', hostname: 'gravatar.com' },
     ],
   },
 
