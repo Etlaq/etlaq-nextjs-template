@@ -26,6 +26,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Todo lists**: Write in Arabic, simple for non-technical users
 - **Progress updates**: Keep concise and user-friendly
 
+## Agents & Skills
+
+Use specialized agents and skills for domain-specific tasks:
+
+### Skills (invoke with `/skill-name`)
+- **`/frontend-design`** - Create distinctive, production-grade UI with high design quality
+
+### Agents (auto-selected by task type)
+| Agent | Use For |
+|-------|---------|
+| `ui-designer` | UI components, design systems, visual aesthetics |
+| `image-specialist` | Fetch culturally appropriate images from Pexels/Pixabay/Unsplash |
+| `auth-specialist` | JWT authentication, protected routes, user management |
+| `database-specialist` | MongoDB schemas, queries, aggregations |
+| `api-integration-specialist` | External APIs, webhooks, file uploads |
+| `ai-apps-developer` | AI features, OpenRouter API, streaming responses |
+| `quality-specialist` | Code review, debugging, security audits, testing |
+
 ## Commands
 
 ```bash
