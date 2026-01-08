@@ -115,17 +115,15 @@ Use: Lucide React, Heroicons, Tabler Icons
 />
 ```
 
-**next.config.ts:**
-```typescript
-images: {
-  remotePatterns: [
-    { protocol: 'https', hostname: 'images.pexels.com' },
-    { protocol: 'https', hostname: 'pixabay.com' },
-    { protocol: 'https', hostname: 'cdn.pixabay.com' },
-    { protocol: 'https', hostname: 'ui-avatars.com' },
-  ]
-}
-```
+**Pre-configured hostnames in next.config.ts:**
+- `images.pexels.com` - Pexels photos
+- `images.unsplash.com`, `plus.unsplash.com` - Unsplash photos
+- `pixabay.com`, `cdn.pixabay.com` - Pixabay photos
+- `ui-avatars.com` - Generated avatars
+- `res.cloudinary.com` - Cloudinary CDN
+- `i.imgur.com` - Imgur
+- `picsum.photos`, `placehold.co` - Placeholder services
+- `gravatar.com`, `www.gravatar.com` - Gravatar avatars
 
 ---
 

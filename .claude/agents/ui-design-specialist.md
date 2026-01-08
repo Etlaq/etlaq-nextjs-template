@@ -165,6 +165,14 @@ Use the **image-specialist** agent for:
 - Contextual illustrations
 - Culturally appropriate imagery for Saudi market
 
+**Pre-configured image hostnames** (no config needed):
+- Pexels: `images.pexels.com`
+- Unsplash: `images.unsplash.com`, `plus.unsplash.com`
+- Pixabay: `pixabay.com`, `cdn.pixabay.com`
+- Avatars: `ui-avatars.com`, `gravatar.com`
+- CDNs: `res.cloudinary.com`, `i.imgur.com`
+- Placeholders: `picsum.photos`, `placehold.co`
+
 **Next.js Image Integration**:
 ```tsx
 <Image
