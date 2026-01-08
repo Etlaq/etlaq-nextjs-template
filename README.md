@@ -6,7 +6,7 @@ A production-ready Next.js 16 template with JWT authentication, MongoDB integrat
 
 - **🔐 Complete Authentication System** - JWT-based auth with bcryptjs password hashing, protected routes, and session management
 - **🗄️ MongoDB Integration** - Mongoose ORM with type-safe schemas and connection pooling
-- **🎨 30+ UI Components** - shadcn/ui component library (New York style) with Radix UI primitives
+- **🎨 40+ UI Components** - HeroUI v3 component library with React Aria accessibility
 - **🤖 AI-Powered Development** - Specialized Claude Code agents for common development tasks
 - **⚡ Modern Stack** - Next.js 16, React 19, TypeScript 5, Tailwind CSS 4
 - **🌓 Theme Support** - Dark/light mode with OKLCH color system
@@ -66,8 +66,7 @@ etlaq-nextjs-template/
 │   ├── register/         # Registration page
 │   └── page.tsx          # Home page
 ├── components/            # React components
-│   ├── ui/               # shadcn/ui component library (30+ components)
-│   └── ...               # Feature components
+│   └── ...               # Feature components (UI from @heroui/react)
 ├── lib/                   # Utility functions
 │   ├── auth.ts           # JWT token utilities
 │   ├── middleware.ts     # Auth middleware
@@ -116,23 +115,28 @@ export default function MyComponent() {
 
 ## 🎨 UI Components
 
-This template includes 30+ pre-built shadcn/ui components:
+This template uses HeroUI v3 (Beta) - a beautiful, accessible React component library built on Tailwind CSS v4 and React Aria:
 
-**Forms & Inputs**: Button, Input, Textarea, Checkbox, Radio, Select, Switch, Slider, Label
-**Layout**: Card, Separator, Tabs, Accordion, Collapsible, Resizable Panels
-**Overlays**: Dialog, Sheet, Popover, Dropdown Menu, Context Menu, Tooltip, Hover Card
-**Navigation**: Navigation Menu, Menubar, Sidebar (collapsible)
-**Feedback**: Alert Dialog, Toast (Sonner), Progress, Badge
-**Data Display**: Table, Data Table (TanStack), Avatar, Carousel, Chart (Recharts)
-**Advanced**: Command Palette, Calendar, Date Picker, Input OTP
+**Buttons**: Button, ButtonGroup, CloseButton
+**Forms**: TextField, TextArea, NumberField, Checkbox, RadioGroup, Select, Switch, Slider, DateField, TimeField, InputOTP, SearchField
+**Layout**: Card, Surface, Separator, Accordion, Disclosure, Tabs
+**Overlays**: Modal, AlertDialog, Popover, Tooltip, Dropdown
+**Collections**: ListBox, ComboBox, TagGroup
+**Feedback**: Alert, Spinner, Skeleton
+**Media**: Avatar
 
-See `CLAUDE.md` for complete component documentation and usage examples.
+```tsx
+// Import components from @heroui/react
+import { Button, Card, Alert, TextField } from '@heroui/react';
+```
+
+See `.claude/skills/heroui/SKILL.md` for complete documentation and usage examples.
 
 ## 🤖 Claude Code Agents
 
 This template includes 9 specialized agents for AI-assisted development:
 
-- **`ui-design-specialist`** - UI/UX design, layouts, shadcn/ui components
+- **`ui-design-specialist`** - UI/UX design, layouts, HeroUI components
 - **`auth-specialist`** - Authentication, protected routes, JWT
 - **`database-specialist`** - MongoDB, Mongoose schemas, queries
 - **`api-integration-specialist`** - External APIs, webhooks, integrations
@@ -156,7 +160,7 @@ See `CLAUDE.md` → "When to Use Which Agent" for detailed task-to-agent mapping
 - Add new schemas following the `User.ts` pattern
 
 ### 3. Add Components
-- Install shadcn/ui components: `bunx shadcn@latest add <component>`
+- Import HeroUI components: `import { Component } from '@heroui/react'`
 - Create custom components in `components/`
 - Use TypeScript interfaces for props
 
@@ -221,7 +225,7 @@ Ensure your MongoDB database is accessible from your deployment environment.
 ## 📖 Learn More
 
 - **Next.js Documentation** - [https://nextjs.org/docs](https://nextjs.org/docs)
-- **shadcn/ui Components** - [https://ui.shadcn.com](https://ui.shadcn.com)
+- **HeroUI v3 Components** - [https://v3.heroui.com/docs/react](https://v3.heroui.com/docs/react)
 - **Tailwind CSS** - [https://tailwindcss.com](https://tailwindcss.com)
 - **MongoDB Docs** - [https://docs.mongodb.com](https://docs.mongodb.com)
 - **Claude Code** - [https://claude.com/code](https://claude.com/code)

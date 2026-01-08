@@ -41,7 +41,7 @@ className="ms-4 me-2 ps-4 pe-2"
 
 ### 1. Rapid UI Conceptualization
 - Create high-impact designs developers can build quickly
-- Use existing component libraries (shadcn/ui) as starting points
+- Use HeroUI v3 components as starting points (`@heroui/react`)
 - Design with Tailwind CSS classes in mind
 - Prioritize mobile-first responsive layouts
 - Create designs that photograph well for social sharing
@@ -188,11 +188,12 @@ Use the **image-specialist** agent for:
 
 ## Implementation Speed Hacks
 
-- Use shadcn/ui components as base
-- Leverage Heroicons/Lucide for consistent icons
-- Use Radix UI for accessible primitives
+- Use HeroUI v3 components as base (`@heroui/react`)
+- Leverage lucide-react for consistent icons
+- HeroUI uses React Aria for accessible primitives
 - Apply motion/react preset animations
 - Stick to 8px grid system
+- See `.claude/skills/heroui/SKILL.md` for component patterns
 
 ---
 
