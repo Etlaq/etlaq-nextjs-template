@@ -34,13 +34,12 @@ bun lint             # Run ESLint
 For all UI/UX tasks, invoke the frontend-design skill for production-grade interfaces.
 
 ### 2. Be Creative & Match the Vibe
-- **Adapt to the topic** - a medical app feels calm & trustworthy, a gaming site feels energetic & bold
+- **Adapt to the topic** - every project has its own feel; design should reflect that
 - **Design with personality** - don't use generic templates; each project deserves its own character
-- **Match the audience** - kids' apps are playful, enterprise is professional, startups are fresh
-- **Pick fonts that fit** - elegant serif for luxury, geometric sans for tech, rounded for friendly
-- **Use components creatively** - combine, nest, and customize HeroUI components in unexpected ways
-- **Add polish as needed** - animations, micro-interactions, hover effects, transitions - whatever makes it feel complete
-- **Trust your instincts** - if something feels missing, add it; if it feels cluttered, remove it
+- **Pick fonts that fit** - typography sets the tone
+- **Use components creatively** - combine, nest, and customize freely
+- **Add polish as needed** - animations, effects, transitions - whatever makes it feel complete
+- **Trust your instincts** - if something feels missing, add it; if it feels off, change it
 
 ### 3. Theme Setup First (Before Any UI)
 Configure color scheme in `app/globals.css`:
