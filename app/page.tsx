@@ -1,12 +1,21 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Button, Card, Spinner } from '@heroui/react';
+import Image from 'next/image';
+import { Button, Card } from '@heroui/react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import {
+  features,
+  stats,
+  processSteps,
+  testimonials,
+  footerLinks,
+  trustIndicators,
+  trustBadges,
+} from '@/lib/content/homepage';
 import {
   ArrowRight,
   ArrowLeft,
@@ -22,60 +31,10 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
-  const { user, logout, loading } = useAuth();
-  const { t, isArabic } = useLanguage();
+  const { t, isArabic, translations: tr } = useLanguage();
 
   // Arrow icon based on language direction
   const ArrowIcon = isArabic ? ArrowLeft : ArrowRight;
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
-  if (user) {
-    return (
-      <div className="min-h-screen bg-background">
-        {/* Theme & Language toggles */}
-        <div className="fixed top-6 start-6 z-50 flex items-center gap-2">
-          <LanguageToggle />
-          <ThemeToggle />
-        </div>
-        <div className="max-w-4xl mx-auto px-6 py-20">
-          <ScrollReveal>
-            <Card className="border border-border/50 bg-gradient-to-br from-card to-primary/5">
-              <Card.Header>
-                <Card.Title className="heading-display text-3xl">
-                  {t('مرحباً بعودتك،', 'Welcome back,')} {user.name}
-                </Card.Title>
-                <Card.Description>{t('تم تسجيل دخولك بنجاح', 'You are authenticated')}</Card.Description>
-              </Card.Header>
-              <Card.Content className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">{t('البريد الإلكتروني', 'Email')}</span>
-                    <p className="font-medium">{user.email}</p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">{t('المعرّف', 'ID')}</span>
-                    <p className="font-mono text-xs">{user.id}</p>
-                  </div>
-                </div>
-              </Card.Content>
-              <Card.Footer>
-                <Button onPress={logout} variant="secondary" className="hover:scale-105 transition-transform">
-                  {t('تسجيل الخروج', 'Sign Out')}
-                </Button>
-              </Card.Footer>
-            </Card>
-          </ScrollReveal>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -89,7 +48,10 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-10">
         {/* Animated gradient mesh background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10 animate-gradient-slow" />
-        <div className="absolute inset-0 bg-grid-animated opacity-50" />
+        <div className="absolute inset-0 bg-grid-animated opacity-30" />
+
+        {/* Enhanced noise overlay for premium feel */}
+        <div className="absolute inset-0 noise-overlay opacity-30" />
 
         {/* Morphing gradient blobs */}
         <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-gradient-to-r from-primary/30 to-primary/10 blur-[100px] animate-morph" />
@@ -150,7 +112,7 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <ScrollReveal delay={300} className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
-              <Link href="/register" className="group">
+              <Link href="#cta" className="group">
                 <div className="relative">
                   {/* Border beam container */}
                   <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-border-beam" />
@@ -168,7 +130,7 @@ export default function Home() {
                   </Button>
                 </div>
               </Link>
-              <Link href="/login" className="group">
+              <Link href="#features" className="group">
                 <div className="relative">
                   {/* Border beam container */}
                   <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-border-beam" />
@@ -180,7 +142,7 @@ export default function Home() {
                     {/* Inner shine effect */}
                     <span className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                     <span className="relative z-10 flex items-center font-semibold text-base">
-                      {t('تسجيل الدخول', 'Sign In')}
+                      {t('اكتشف المزيد', 'Learn More')}
                     </span>
                   </Button>
                 </div>
@@ -214,7 +176,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="relative py-32 border-t border-border/50 overflow-hidden">
+      <section id="features" className="relative py-32 border-t border-border/50 overflow-hidden">
         {/* Background decoration */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px]" />
@@ -242,61 +204,36 @@ export default function Home() {
 
           {/* Feature cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Zap,
-                titleAr: 'سرعة البرق',
-                titleEn: 'Lightning Fast',
-                descAr: 'محسّن للسرعة مع نشر حافة وتخزين مؤقت ذكي.',
-                descEn: 'Optimized for speed with edge deployment and smart caching.',
-                number: '01',
-                gradient: 'from-yellow-500/20 to-orange-500/20',
-              },
-              {
-                icon: Shield,
-                titleAr: 'آمن افتراضياً',
-                titleEn: 'Secure by Default',
-                descAr: 'أمان على مستوى المؤسسات مع مصادقة JWT والتشفير.',
-                descEn: 'Enterprise-grade security with JWT authentication and encryption.',
-                number: '02',
-                gradient: 'from-green-500/20 to-emerald-500/20',
-              },
-              {
-                icon: Layers,
-                titleAr: 'قابل للتوسع بلا حدود',
-                titleEn: 'Infinitely Scalable',
-                descAr: 'ينمو مع عملك من النموذج الأولي إلى الإنتاج.',
-                descEn: 'Grows with your business from prototype to production.',
-                number: '03',
-                gradient: 'from-blue-500/20 to-cyan-500/20',
-              },
-            ].map((feature, index) => (
-              <ScrollReveal
-                key={feature.number}
-                delay={index * 150}
-                className="group"
-              >
-                <Card className="h-full border border-border/50 hover:border-primary/30 transition-all duration-500 card-hover-lift card-hover-glow bg-gradient-to-br from-card to-card/50 overflow-hidden relative">
-                  {/* Hover gradient overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+            {features.map((feature, index) => {
+              const featureText = tr.features[feature.translationKey];
+              return (
+                <ScrollReveal
+                  key={feature.id}
+                  delay={index * 150}
+                  className="group"
+                >
+                  <Card className="h-full glass-card group-hover:glass-card-hover overflow-hidden relative transition-all duration-500">
+                    {/* Hover gradient overlay */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
-                  <Card.Header className="relative">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary/30 group-hover:to-primary/10 transition-all duration-300 shadow-lg shadow-primary/10 group-hover:scale-110">
-                        <feature.icon className="h-6 w-6 text-primary icon-pulse" />
+                    <Card.Header className="relative">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary/30 group-hover:to-primary/10 transition-all duration-300 shadow-lg shadow-primary/10 group-hover:scale-110">
+                          <feature.icon className="h-6 w-6 text-primary icon-pulse" />
+                        </div>
+                        <span className="number-detail px-2 py-1 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors border border-primary/10">{feature.number}</span>
                       </div>
-                      <span className="number-detail px-2 py-1 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors">{feature.number}</span>
-                    </div>
-                    <Card.Title className="text-xl group-hover:text-primary transition-colors">{t(feature.titleAr, feature.titleEn)}</Card.Title>
-                  </Card.Header>
-                  <Card.Content className="relative">
-                    <p className="text-muted-foreground leading-relaxed group-hover:text-muted-foreground/80 transition-colors">
-                      {t(feature.descAr, feature.descEn)}
-                    </p>
-                  </Card.Content>
-                </Card>
-              </ScrollReveal>
-            ))}
+                      <Card.Title className="text-xl group-hover:text-primary transition-colors">{featureText.title}</Card.Title>
+                    </Card.Header>
+                    <Card.Content className="relative">
+                      <p className="text-muted-foreground leading-relaxed group-hover:text-muted-foreground/80 transition-colors">
+                        {featureText.desc}
+                      </p>
+                    </Card.Content>
+                  </Card>
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -305,20 +242,15 @@ export default function Home() {
       <section className="relative py-20 border-t border-border/50 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: '+10K', labelAr: 'مستخدم نشط', labelEn: 'Active Users', icon: Globe },
-              { value: '99.9%', labelAr: 'وقت التشغيل', labelEn: 'Uptime', icon: TrendingUp },
-              { value: '+50', labelAr: 'دولة', labelEn: 'Countries', icon: Rocket },
-              { value: '4.9/5', labelAr: 'التقييم', labelEn: 'Rating', icon: Star },
-            ].map((stat, i) => (
-              <ScrollReveal key={i} delay={i * 100} className="text-center">
+            {stats.map((stat, i) => (
+              <ScrollReveal key={stat.id} delay={i * 100} className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 mb-4">
                   <stat.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div className="heading-display text-4xl sm:text-5xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                   {stat.value}
                 </div>
-                <div className="text-muted-foreground mt-1">{t(stat.labelAr, stat.labelEn)}</div>
+                <div className="text-muted-foreground mt-1">{tr.stats[stat.translationKey]}</div>
               </ScrollReveal>
             ))}
           </div>
@@ -352,47 +284,25 @@ export default function Home() {
             <div className="hidden md:block absolute top-16 left-[20%] right-[20%] h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             <div className="hidden md:block absolute top-16 left-[20%] right-[20%] h-0.5 bg-gradient-to-r from-primary via-primary/50 to-primary animate-pulse" style={{ clipPath: 'inset(0 50% 0 0)' }} />
 
-            {[
-              {
-                step: '01',
-                titleAr: 'سجّل',
-                titleEn: 'Sign Up',
-                descAr: 'أنشئ حسابك في ثوانٍ. لا حاجة لبطاقة ائتمان.',
-                descEn: 'Create your account in seconds. No credit card required.',
-                icon: Rocket,
-              },
-              {
-                step: '02',
-                titleAr: 'خصّص',
-                titleEn: 'Configure',
-                descAr: 'خصّص إعداداتك واربط خدماتك.',
-                descEn: 'Customize your settings and connect your services.',
-                icon: Layers,
-              },
-              {
-                step: '03',
-                titleAr: 'أطلق',
-                titleEn: 'Launch',
-                descAr: 'ابدأ العمل ونمّي أعمالك.',
-                descEn: 'Go live and start growing your business.',
-                icon: TrendingUp,
-              },
-            ].map((item, index) => (
-              <ScrollReveal
-                key={item.step}
-                delay={(index + 2) * 100}
-                className="text-center group"
-              >
-                <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 mb-6 sonar group-hover:scale-110 transition-transform duration-300">
-                  <item.icon className="h-8 w-8 text-primary" />
-                  <span className="absolute -top-2 -end-2 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-mono font-bold">
-                    {item.step.slice(1)}
-                  </span>
-                </div>
-                <h3 className="text-xl font-medium mb-2 group-hover:text-primary transition-colors">{t(item.titleAr, item.titleEn)}</h3>
-                <p className="text-muted-foreground">{t(item.descAr, item.descEn)}</p>
-              </ScrollReveal>
-            ))}
+            {processSteps.map((item, index) => {
+              const stepText = tr.process[item.translationKey];
+              return (
+                <ScrollReveal
+                  key={item.id}
+                  delay={(index + 2) * 100}
+                  className="text-center group"
+                >
+                  <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 mb-6 sonar group-hover:scale-110 transition-transform duration-300">
+                    <item.icon className="h-8 w-8 text-primary" />
+                    <span className="absolute -top-2 -end-2 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-mono font-bold">
+                      {item.step.slice(1)}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-medium mb-2 group-hover:text-primary transition-colors">{stepText.title}</h3>
+                  <p className="text-muted-foreground">{stepText.desc}</p>
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -422,36 +332,13 @@ export default function Home() {
 
           {/* Testimonial grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              {
-                quoteAr: "غيّرت هذه المنصة طريقة بناء منتجاتنا. السرعة والموثوقية لا مثيل لها.",
-                quoteEn: "This platform transformed how we build products. The speed and reliability are unmatched.",
-                authorAr: "نورة القحطاني",
-                authorEn: "Noura Al-Qahtani",
-                roleAr: "مديرة التقنية، شركة التقنية السعودية",
-                roleEn: "CTO, Saudi Tech Co.",
-                rating: 5,
-                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
-                verified: true,
-              },
-              {
-                quoteAr: "أخيراً، حل يتوسع مع احتياجاتنا. تجربة المطور استثنائية.",
-                quoteEn: "Finally, a solution that scales with our needs. The developer experience is phenomenal.",
-                authorAr: "عبدالرحمن الشمري",
-                authorEn: "Abdulrahman Al-Shammari",
-                roleAr: "مطور رئيسي، نيوم تك",
-                roleEn: "Lead Developer, NEOM Tech",
-                rating: 5,
-                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-                verified: true,
-              },
-            ].map((testimonial, index) => (
+            {testimonials.map((testimonial, index) => (
               <ScrollReveal
-                key={testimonial.authorEn}
+                key={testimonial.id}
                 delay={(index + 2) * 100}
                 className="group"
               >
-                <Card className="h-full border border-border/50 hover:border-primary/30 transition-all duration-500 bg-gradient-to-br from-card to-card/50 relative overflow-hidden card-hover-lift">
+                <Card className="h-full glass-card group-hover:glass-card-hover relative overflow-hidden transition-all duration-500">
                   {/* Decorative quote mark */}
                   <div className="absolute top-4 end-4 text-8xl font-serif text-primary/10 leading-none select-none group-hover:text-primary/20 transition-colors duration-500">&ldquo;</div>
 
@@ -470,7 +357,7 @@ export default function Home() {
                       ))}
                     </div>
                     <blockquote className="text-xl leading-relaxed mb-8 font-medium">
-                      &ldquo;{t(testimonial.quoteAr, testimonial.quoteEn)}&rdquo;
+                      &ldquo;{isArabic ? testimonial.quoteAr : testimonial.quoteEn}&rdquo;
                     </blockquote>
 
                     {/* Enhanced avatar section */}
@@ -483,10 +370,11 @@ export default function Home() {
                         <div className="absolute -inset-0.5 rounded-full bg-background" />
                         {/* Avatar container */}
                         <div className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all duration-300 shadow-lg group-hover:shadow-primary/25">
-                          <img
+                          <Image
                             src={testimonial.avatar}
-                            alt={t(testimonial.authorAr, testimonial.authorEn)}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            alt={isArabic ? testimonial.authorAr : testimonial.authorEn}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         </div>
                         {/* Verified badge */}
@@ -499,8 +387,8 @@ export default function Home() {
 
                       {/* Author info */}
                       <div>
-                        <p className="font-semibold group-hover:text-primary transition-colors duration-300">{t(testimonial.authorAr, testimonial.authorEn)}</p>
-                        <p className="text-muted-foreground text-sm">{t(testimonial.roleAr, testimonial.roleEn)}</p>
+                        <p className="font-semibold group-hover:text-primary transition-colors duration-300">{isArabic ? testimonial.authorAr : testimonial.authorEn}</p>
+                        <p className="text-muted-foreground text-sm">{isArabic ? testimonial.roleAr : testimonial.roleEn}</p>
                       </div>
                     </div>
                   </Card.Content>
@@ -512,7 +400,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-32 border-t border-border/50 overflow-hidden">
+      <section id="cta" className="relative py-32 border-t border-border/50 overflow-hidden">
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-primary/80" />
         <div className="absolute inset-0 bg-grid-animated opacity-10" />
@@ -573,8 +461,8 @@ export default function Home() {
           {/* Alternative links */}
           <ScrollReveal delay={400}>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-primary-foreground/70">
-              <Link href="/login" className="hover:text-primary-foreground transition-colors flex items-center gap-1 group">
-                {t('لديك حساب بالفعل؟', 'Already have an account?')} <span className="underline group-hover:text-white transition-colors">{t('سجّل الدخول', 'Sign in')}</span>
+              <Link href="#features" className="hover:text-primary-foreground transition-colors flex items-center gap-1 group">
+                {t('تعرف على المزيد', 'Learn more')} <span className="underline group-hover:text-white transition-colors">{t('عن مميزاتنا', 'about our features')}</span>
               </Link>
             </div>
           </ScrollReveal>
@@ -638,18 +526,13 @@ export default function Home() {
 
             {/* Links */}
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-              {[
-                { ar: 'المميزات', en: 'Features' },
-                { ar: 'الأسعار', en: 'Pricing' },
-                { ar: 'عنّا', en: 'About' },
-                { ar: 'تواصل معنا', en: 'Contact' },
-              ].map((link) => (
+              {footerLinks.map((link) => (
                 <Link
-                  key={link.en}
-                  href="#"
+                  key={link.id}
+                  href={link.href}
                   className="relative hover:text-primary transition-colors group/link"
                 >
-                  {t(link.ar, link.en)}
+                  {tr.footer[link.translationKey]}
                   <span className="absolute -bottom-1 start-0 w-0 h-0.5 bg-primary group-hover/link:w-full transition-all duration-300" />
                 </Link>
               ))}

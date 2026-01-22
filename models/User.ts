@@ -1,38 +1,42 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IUser extends Document {
-    email: string;
-    password: string;
-    name: string;
-    createdAt: Date;
-    updatedAt: Date;
+  email: string;
+  password: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const UserSchema = new Schema<IUser>({
+const UserSchema = new Schema<IUser>(
+  {
     email: {
-        type: String,
-        required: [true, 'Email is required'],
-        unique: true,
-        lowercase: true,
-        trim: true,
-        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+      type: String,
+      required: [true, 'البريد الإلكتروني مطلوب'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'البريد الإلكتروني غير صحيح'],
     },
     password: {
-        type: String,
-        required: [true, 'Password is required'],
-        minlength: [6, 'Password must be at least 6 characters long']
+      type: String,
+      required: [true, 'كلمة المرور مطلوبة'],
+      minlength: [6, 'يجب أن تكون كلمة المرور 6 أحرف على الأقل'],
     },
     name: {
-        type: String,
-        required: [true, 'Name is required'],
-        trim: true,
-        maxlength: [50, 'Name cannot be more than 50 characters']
-    }
-}, {
-    timestamps: true
-});
+      type: String,
+      required: [true, 'الاسم مطلوب'],
+      trim: true,
+      maxlength: [100, 'الاسم لا يجب أن يتجاوز 100 حرف'],
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-// Prevent re-compilation during development
+// Note: email index is already created by the 'unique: true' option above
+
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export default User;

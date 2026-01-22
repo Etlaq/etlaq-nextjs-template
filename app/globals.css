@@ -52,7 +52,7 @@
   --color-surface-foreground: var(--card-foreground);
 }
 
-/* Light mode - Purple primary, monotone palette, subtle borders */
+/* Light mode - Purple primary, sophisticated palette, glassmorphism */
 /* Note: Avoid pure black (0) and pure white (1) - use soft alternatives */
 :root {
   --radius: 0.625rem;
@@ -74,9 +74,9 @@
   --muted: oklch(0.96 0 0);
   --muted-foreground: oklch(0.45 0 0);
   --destructive: oklch(0.55 0.2 25);
-  /* Subtle borders */
-  --border: oklch(0.92 0 0);
-  --input: oklch(0.94 0 0);
+  /* Subtle borders - slightly more visible for glassmorphism */
+  --border: oklch(0.90 0 0);
+  --input: oklch(0.93 0 0);
   --ring: oklch(0.55 0.22 280);
   /* Chart colors - purple tones */
   --chart-1: oklch(0.55 0.22 280);
@@ -92,9 +92,13 @@
   --sidebar-accent-foreground: oklch(0.18 0 0);
   --sidebar-border: oklch(0.94 0 0);
   --sidebar-ring: oklch(0.55 0.22 280);
+  /* Glassmorphism tokens */
+  --glass-bg: oklch(1 0 0 / 0.7);
+  --glass-border: oklch(0.9 0 0 / 0.5);
+  --glass-shadow: 0 4px 24px oklch(0.5 0 0 / 0.1);
 }
 
-/* Dark mode - Purple primary, monotone palette */
+/* Dark mode - Purple primary, sophisticated palette, glassmorphism */
 /* Note: Using soft black (#121212 equivalent) instead of pure black for reduced eye strain */
 .dark {
   --background: oklch(0.13 0 0);
@@ -115,9 +119,9 @@
   --muted: oklch(0.2 0 0);
   --muted-foreground: oklch(0.6 0 0);
   --destructive: oklch(0.65 0.2 25);
-  /* Subtle borders */
-  --border: oklch(0.92 0 0 / 10%);
-  --input: oklch(0.92 0 0 / 12%);
+  /* Subtle borders - slightly more visible for glassmorphism */
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
   --ring: oklch(0.7 0.2 280);
   /* Chart colors - purple tones */
   --chart-1: oklch(0.7 0.2 280);
@@ -131,8 +135,12 @@
   --sidebar-primary-foreground: oklch(0.13 0 0);
   --sidebar-accent: oklch(0.2 0 0);
   --sidebar-accent-foreground: oklch(0.92 0 0);
-  --sidebar-border: oklch(0.92 0 0 / 10%);
+  --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.7 0.2 280);
+  /* Glassmorphism tokens - dark mode */
+  --glass-bg: oklch(1 0 0 / 0.6);
+  --glass-border: oklch(1 0 0 / 0.1);
+  --glass-shadow: 0 4px 24px oklch(0 0 0 / 0.3);
 }
 
 @layer base {
@@ -1048,4 +1056,275 @@ html[lang="ar-SA"] .heading-tall {
 
 [data-react-grab-crosshair] {
   background: oklch(0.55 0.2 280) !important;
+}
+
+/* ===========================================
+   GLASSMORPHISM UTILITIES
+   Modern glass effect with blur and transparency
+   =========================================== */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 2px 8px oklch(0.5 0 0 / 0.05);
+}
+
+.glass-lg {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px oklch(0.5 0 0 / 0.12);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.glass-card-hover {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s;
+}
+
+.glass-card-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* ===========================================
+   ADVANCED CARD STYLES
+   More sophisticated card designs
+   =========================================== */
+
+.card-gradient-border {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.card-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    transparent 50%,
+    var(--primary) 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.card-gradient-border:hover::before {
+  opacity: 1;
+}
+
+.card-inner-glow {
+  box-shadow: inset 0 0 40px oklch(0.55 0.22 280 / 0.03);
+}
+
+.dark .card-inner-glow {
+  box-shadow: inset 0 0 40px oklch(0.7 0.2 280 / 0.05);
+}
+
+/* ===========================================
+   TEXT GRADIENTS
+   Enhanced gradient text effects
+   =========================================== */
+
+.text-gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--foreground) 0%,
+    var(--primary) 50%,
+    var(--foreground) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textGradient 3s linear infinite;
+}
+
+.text-gradient-multi {
+  background: linear-gradient(
+    135deg,
+    oklch(0.55 0.22 280) 0%,
+    oklch(0.7 0.25 280) 50%,
+    oklch(0.5 0.2 280) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===========================================
+   ENHANCED BUTTON STYLES
+   More sophisticated button designs
+   =========================================== */
+
+.btn-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.btn-glass:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px oklch(0.55 0.22 280 / 0.3);
+}
+
+.btn-gradient-outline {
+  position: relative;
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary) 0%, oklch(0.65 0.25 280) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.btn-gradient-outline:hover::before {
+  opacity: 1;
+}
+
+.btn-gradient-outline:hover {
+  color: var(--primary-foreground);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px oklch(0.55 0.22 280 / 0.3);
+}
+
+/* ===========================================
+   LOADING STATES
+   Enhanced loading animations
+   =========================================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    oklch(0.9 0 0 / 0.5) 50%,
+    var(--muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ===========================================
+   FOCUS STATES
+   Improved accessibility with visual feedback
+   =========================================== */
+
+.focus-ring {
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px oklch(0.55 0.22 280 / 0.1);
+}
+
+.focus-ring-inner {
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.focus-ring-inner:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+/* ===========================================
+   NOISE TEXTURE
+   Subtle noise for premium feel
+   =========================================== */
+
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ===========================================
+   SCROLLBAR STYLING
+   Custom scrollbar for webkit browsers
+   =========================================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 10px;
+  border: 2px solid var(--muted);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
 }

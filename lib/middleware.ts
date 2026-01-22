@@ -1,38 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { verifyToken, extractToken, JWTPayload } from '@/lib/auth';
 
-export function withAuth(handler: (request: NextRequest, userId: string) => Promise<NextResponse>) {
-    return async (request: NextRequest) => {
-        try {
-            // Extract token from Authorization header
-            const authHeader = request.headers.get('authorization');
-            const token = extractTokenFromHeader(authHeader);
+export type AuthenticatedHandler = (
+  request: NextRequest,
+  payload: JWTPayload
+) => Promise<NextResponse | Response>;
 
-            if (!token) {
-                return NextResponse.json(
-                    { error: 'Authentication required' },
-                    { status: 401 }
-                );
-            }
+/**
+ * Higher-order function to wrap API routes with authentication
+ * Usage: export const GET = withAuth(async (req, payload) => { ... })
+ */
+export function withAuth(handler: AuthenticatedHandler) {
+  return async (request: NextRequest): Promise<NextResponse | Response> => {
+    const authHeader = request.headers.get('authorization');
+    const token = extractToken(authHeader);
 
-            // Verify token
-            const payload = verifyToken(token);
-            if (!payload) {
-                return NextResponse.json(
-                    { error: 'Invalid or expired token' },
-                    { status: 401 }
-                );
-            }
+    if (!token) {
+      return NextResponse.json(
+        { error: 'التوثيق مطلوب' }, // Authentication required
+        { status: 401 }
+      );
+    }
 
-            // Call the original handler with the user ID
-            return await handler(request, payload.userId);
+    const payload = verifyToken(token);
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'الجلسة منتهية. يرجى تسجيل الدخول مرة أخرى' }, // Invalid/expired token
+        { status: 401 }
+      );
+    }
 
-        } catch (error: any) {
-            console.error('Auth middleware error:', error);
-            return NextResponse.json(
-                { error: 'Internal server error' },
-                { status: 500 }
-            );
-        }
-    };
+    return handler(request, payload);
+  };
+}
+
+/**
+ * Optional auth - doesn't fail if no token, but provides payload if present
+ */
+export type OptionalAuthHandler = (
+  request: NextRequest,
+  payload: JWTPayload | null
+) => Promise<NextResponse>;
+
+export function withOptionalAuth(handler: OptionalAuthHandler) {
+  return async (request: NextRequest): Promise<NextResponse> => {
+    const authHeader = request.headers.get('authorization');
+    const token = extractToken(authHeader);
+    const payload = token ? verifyToken(token) : null;
+
+    return handler(request, payload);
+  };
 }

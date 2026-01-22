@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader, IBM_Plex_Sans_Arabic, Noto_Naskh_Arabic } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // English fonts
 const geistSans = Geist({

@@ -1,14 +1,14 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-type Language = 'ar' | 'en';
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { translations, type Language, type TranslationKeys } from '@/lib/translations';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (ar: string, en: string) => string;
   isArabic: boolean;
+  translations: TranslationKeys;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -16,6 +16,9 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('ar');
   const [mounted, setMounted] = useState(false);
+
+  // Memoize translations to avoid recalculating on every render
+  const currentTranslations = useMemo(() => translations[language], [language]);
 
   useEffect(() => {
     setMounted(true);
@@ -42,7 +45,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     updateDocumentDirection(lang);
   };
 
-  // Translation helper - returns Arabic or English based on current language
+  // Legacy translation helper - returns Arabic or English based on current language
+  // For backward compatibility; prefer using translations object directly
   const t = (ar: string, en: string) => {
     return language === 'ar' ? ar : en;
   };
@@ -52,7 +56,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, isArabic: language === 'ar' }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isArabic: language === 'ar', translations: currentTranslations }}>
       {children}
     </LanguageContext.Provider>
   );

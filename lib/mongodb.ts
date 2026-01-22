@@ -1,51 +1,51 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-const DB_NAME = process.env.DB_NAME || 'etlaq_auth';
-
-if (!MONGODB_URI) {
+// Read env at runtime, not module load time (allows build without env vars)
+function getMongoURI() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
     throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  }
+  return uri;
 }
 
-interface MongooseConnection {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
+const DB_NAME = process.env.DB_NAME || 'etlaq';
+
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
 }
 
 declare global {
-    var mongoose: MongooseConnection | undefined;
+  var mongoose: MongooseCache | undefined;
 }
 
 let cached = global.mongoose;
 
 if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
-async function connectDB(): Promise<typeof mongoose> {
-    if (cached!.conn) {
-        return cached!.conn;
-    }
-
-    if (!cached!.promise) {
-        const opts = {
-            bufferCommands: false,
-            dbName: DB_NAME,
-        };
-
-        cached!.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-            return mongoose;
-        });
-    }
-
-    try {
-        cached!.conn = await cached!.promise;
-    } catch (e) {
-        cached!.promise = null;
-        throw e;
-    }
-
+export default async function connectDB() {
+  if (cached!.conn) {
     return cached!.conn;
-}
+  }
 
-export default connectDB;
+  if (!cached!.promise) {
+    const opts = {
+      dbName: DB_NAME,
+      bufferCommands: false,
+    };
+
+    cached!.promise = mongoose.connect(getMongoURI(), opts);
+  }
+
+  try {
+    cached!.conn = await cached!.promise;
+  } catch (e) {
+    cached!.promise = null;
+    throw e;
+  }
+
+  return cached!.conn;
+}

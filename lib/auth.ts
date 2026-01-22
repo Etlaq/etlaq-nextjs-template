@@ -1,47 +1,51 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET!;
-
-if (!JWT_SECRET) {
-    throw new Error('Please define the JWT_SECRET environment variable inside .env.local');
-}
+import { serverEnv } from '@/lib/env';
 
 export interface JWTPayload {
-    userId: string;
-    email: string;
-    name: string;
+  userId: string;
+  email: string;
+  name: string;
 }
 
-// Hash password
+/**
+ * Hash a plain text password
+ */
 export async function hashPassword(password: string): Promise<string> {
-    const saltRounds = 12;
-    return await bcrypt.hash(password, saltRounds);
+  return await bcrypt.hash(password, 12);
 }
 
-// Verify password
-export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword);
+/**
+ * Verify a password against a hash
+ */
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return await bcrypt.compare(password, hash);
 }
 
-// Generate JWT token
+/**
+ * Generate a JWT token for a user
+ */
 export function generateToken(payload: JWTPayload): string {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign(payload, serverEnv.JWT_SECRET, { expiresIn: '7d' });
 }
 
-// Verify JWT token
+/**
+ * Verify and decode a JWT token
+ */
 export function verifyToken(token: string): JWTPayload | null {
-    try {
-        return jwt.verify(token, JWT_SECRET) as JWTPayload;
-    } catch (error) {
-        return null;
-    }
+  try {
+    return jwt.verify(token, serverEnv.JWT_SECRET) as JWTPayload;
+  } catch {
+    return null;
+  }
 }
 
-// Extract token from Authorization header
-export function extractTokenFromHeader(authHeader: string | null): string | null {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return null;
-    }
-    return authHeader.substring(7);
+/**
+ * Extract token from Authorization header
+ */
+export function extractToken(authHeader: string | null): string | null {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  return authHeader.slice(7);
 }
