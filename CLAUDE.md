@@ -37,8 +37,10 @@ For all UI/UX tasks, invoke the frontend-design skill for production-grade inter
 - **Adapt to the topic** - a medical app feels calm & trustworthy, a gaming site feels energetic & bold
 - **Design with personality** - don't use generic templates; each project deserves its own character
 - **Match the audience** - kids' apps are playful, enterprise is professional, startups are fresh
+- **Pick fonts that fit** - elegant serif for luxury, geometric sans for tech, rounded for friendly
 - **Use components creatively** - combine, nest, and customize HeroUI components in unexpected ways
-- **Explore the vibe** - consider spacing, animations, imagery, and typography that fit the mood
+- **Add polish as needed** - animations, micro-interactions, hover effects, transitions - whatever makes it feel complete
+- **Trust your instincts** - if something feels missing, add it; if it feels cluttered, remove it
 
 ### 3. Theme Setup First (Before Any UI)
 Configure color scheme in `app/globals.css`:
