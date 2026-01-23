@@ -1,5 +1,6 @@
 'use client';
 
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from 'react';
 import { Button } from '@heroui/react';
 import { Moon, Sun, Monitor } from 'lucide-react';
@@ -11,11 +12,11 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const stored = localStorage.getItem('theme') as Theme | null;
     if (stored) {
       setTheme(stored);
     }
+    setMounted(true);
   }, []);
 
   useEffect(() => {

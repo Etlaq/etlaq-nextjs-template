@@ -79,10 +79,11 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ error: "No response body" }, { status: 500 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("[GRAB] Proxy error:", error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: "Proxy error", details: error.message },
+      { error: "Proxy error", details: message },
       { status: 500 }
     );
   }

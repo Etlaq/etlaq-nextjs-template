@@ -2,7 +2,6 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@heroui/react';
-import { Languages } from 'lucide-react';
 
 export function LanguageToggle() {
   const { language, setLanguage } = useLanguage();

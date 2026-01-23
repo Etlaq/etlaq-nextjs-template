@@ -13,8 +13,6 @@ import {
   processSteps,
   testimonials,
   footerLinks,
-  trustIndicators,
-  trustBadges,
 } from '@/lib/content/homepage';
 import {
   ArrowRight,
@@ -23,11 +21,9 @@ import {
   Rocket,
   Zap,
   Shield,
-  Layers,
   Star,
   Sparkles,
   Globe,
-  TrendingUp,
 } from 'lucide-react';
 
 export default function Home() {

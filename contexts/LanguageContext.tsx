@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { translations, type Language, type TranslationKeys } from '@/lib/translations';
@@ -20,15 +21,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Memoize translations to avoid recalculating on every render
   const currentTranslations = useMemo(() => translations[language], [language]);
 
-  useEffect(() => {
-    setMounted(true);
-    const savedLang = localStorage.getItem('language') as Language;
-    if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
-      setLanguageState(savedLang);
-      updateDocumentDirection(savedLang);
-    }
-  }, []);
-
   const updateDocumentDirection = (lang: Language) => {
     if (lang === 'ar') {
       document.documentElement.setAttribute('dir', 'rtl');
@@ -38,6 +30,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       document.documentElement.setAttribute('lang', 'en');
     }
   };
+
+  useEffect(() => {
+    setMounted(true);
+    const savedLang = localStorage.getItem('language') as Language;
+    if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
+      setLanguageState(savedLang);
+      updateDocumentDirection(savedLang);
+    }
+  }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: true };
       }
       return { success: false, error: data.error };
-    } catch (error) {
+    } catch {
       return { success: false, error: 'حدث خطأ في الاتصال' };
     }
   };
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { success: true };
       }
       return { success: false, error: data.error };
-    } catch (error) {
+    } catch {
       return { success: false, error: 'حدث خطأ في الاتصال' };
     }
   };

@@ -101,9 +101,9 @@
 /* Dark mode - Purple primary, sophisticated palette, glassmorphism */
 /* Note: Using soft black (#121212 equivalent) instead of pure black for reduced eye strain */
 .dark {
-  --background: oklch(0.13 0 0);
+  --background: oklch(0.10 0 0);
   --foreground: oklch(0.92 0 0);
-  --card: oklch(0.16 0 0);
+  --card: oklch(0.12 0 0);
   --card-foreground: oklch(0.92 0 0);
   --popover: oklch(0.16 0 0);
   --popover-foreground: oklch(0.92 0 0);
@@ -138,9 +138,9 @@
   --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.7 0.2 280);
   /* Glassmorphism tokens - dark mode */
-  --glass-bg: oklch(1 0 0 / 0.6);
-  --glass-border: oklch(1 0 0 / 0.1);
-  --glass-shadow: 0 4px 24px oklch(0 0 0 / 0.3);
+  --glass-bg: oklch(0.14 0 0 / 0.8);
+  --glass-border: oklch(1 0 0 / 0.15);
+  --glass-shadow: 0 4px 24px oklch(0 0 0 / 0.4);
 }
 
 @layer base {
@@ -173,6 +173,15 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Subtle gradient backgrounds for depth */
+  :root {
+    background: linear-gradient(to bottom, oklch(0.985 0 0) 0%, oklch(0.99 0 0) 50%, oklch(0.985 0 0) 100%);
+  }
+
+  .dark {
+    background: linear-gradient(to bottom, oklch(0.10 0 0) 0%, oklch(0.08 0 0) 50%, oklch(0.10 0 0) 100%);
   }
 }
 
@@ -447,8 +456,8 @@ html[lang="ar-SA"] .heading-tall {
 
 .dark .bg-grid-animated {
   background-image:
-    linear-gradient(to right, oklch(1 0 0 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(1 0 0 / 0.05) 1px, transparent 1px);
+    linear-gradient(to right, oklch(1 0 0 / 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(1 0 0 / 0.03) 1px, transparent 1px);
 }
 
 /* ===========================================
@@ -1108,7 +1117,13 @@ html[lang="ar-SA"] .heading-tall {
 
 .glass-card-hover:hover {
   transform: scale(1.05);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px oklch(0.7 0.2 280 / 0.25);
+  border-color: oklch(0.7 0.2 280 / 0.4);
+}
+
+.dark .glass-card,
+.dark .glass-card-hover {
+  box-shadow: 0 4px 24px oklch(0 0 0 / 0.5), inset 0 1px 0 oklch(1 0 0 / 0.05);
 }
 
 /* ===========================================
@@ -1151,7 +1166,7 @@ html[lang="ar-SA"] .heading-tall {
 }
 
 .dark .card-inner-glow {
-  box-shadow: inset 0 0 40px oklch(0.7 0.2 280 / 0.05);
+  box-shadow: inset 0 0 40px oklch(0.7 0.2 280 / 0.08);
 }
 
 /* ===========================================

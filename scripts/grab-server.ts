@@ -139,8 +139,8 @@ const server = http.createServer(async (req, res) => {
           res.write(
             `data: ${JSON.stringify({ type: "complete", sessionId })}\n\n`
           );
-        } catch (error: any) {
-          if (error.name !== "AbortError") {
+        } catch (error) {
+          if (error instanceof Error && error.name !== "AbortError") {
             console.error("[GRAB] Error:", error);
             res.write(
               `data: ${JSON.stringify({ type: "error", error: error.message })}\n\n`
@@ -150,7 +150,7 @@ const server = http.createServer(async (req, res) => {
 
         sessions.delete(sessionId);
         res.end();
-      } catch (error: any) {
+      } catch (error) {
         console.error("[GRAB] Parse error:", error);
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Invalid request body" }));

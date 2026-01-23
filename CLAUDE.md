@@ -467,6 +467,14 @@ These work with `next/image` out-of-the-box:
 - Avatars: UI Avatars, Gravatar
 - Placeholders: Picsum, Placehold.co
 
+## Image Guidelines
+
+- Only add images that are highly relevant to the task - avoid unrelated or generic images
+- Use the `image-specialist` agent to find culturally appropriate images
+- Always verify images exist after adding them to the project
+- Store images locally in `public/images/` rather than using external URLs
+- Download images with `curl -L -o public/images/filename.jpg "URL"`
+
 ---
 
 ## Common Tasks
