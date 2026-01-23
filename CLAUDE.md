@@ -12,6 +12,24 @@ bun lint         # ESLint
 ## Stack
 Next.js 16 (React 19) • Tailwind CSS 4 (OKLCH) • HeroUI v3 • MongoDB/Mongoose • JWT/bcryptjs • framer-motion
 
+## Task Todos
+When creating task lists, write in Arabic using simple, non-technical language:
+
+**Rules:**
+- Write task subjects in Arabic only
+- Use simple language anyone can understand
+- Do NOT mention library names, tools, or technical terms
+- Focus on the end result, not implementation details
+
+**Examples:**
+| Good (Arabic, simple) | Bad (English, technical) |
+|-----------------------|--------------------------|
+| Login page | Add JWT auth with bcrypt hashing |
+| Homepage design | Implement HeroUI v3 components |
+| Database connection | Configure MongoDB with Mongoose |
+| Fix color issue | Update OKLCH variables in globals.css |
+| Dark mode toggle | Add ThemeToggle with system detection |
+
 ## Workflow
 
 ### 1. UI Tasks → `/frontend-design` skill
