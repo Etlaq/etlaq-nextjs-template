@@ -31,10 +31,12 @@ export default function Home() {
             )}
           </p>
 
-          <Button size="lg" variant="primary" className="rounded-full px-8">
-            {t('ابدأ الآن', 'Get Started')}
-            <Arrow className="ms-2 h-4 w-4" />
-          </Button>
+          <a href="https://etlaq.sa" target="_blank" rel="noopener noreferrer">
+            <Button size="lg" variant="primary" className="rounded-full px-8">
+              {t('ابدأ الآن', 'Get Started')}
+              <Arrow className="ms-2 h-4 w-4" />
+            </Button>
+          </a>
         </div>
       </main>
 
