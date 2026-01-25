@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useCallback, useSyncExternalStore } from 'react';
 
 type Language = 'ar' | 'en';
 type Direction = 'rtl' | 'ltr';
@@ -15,25 +15,33 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Language>('ar');
+function getStoredLang(): Language {
+  if (typeof window === 'undefined') return 'ar';
+  const saved = localStorage.getItem('lang');
+  return saved === 'en' ? 'en' : 'ar';
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem('lang') as Language;
-    if (saved && (saved === 'ar' || saved === 'en')) {
-      setLang(saved);
-    }
-  }, []);
+let listeners: (() => void)[] = [];
+
+function subscribe(listener: () => void) {
+  listeners = [...listeners, listener];
+  return () => {
+    listeners = listeners.filter(l => l !== listener);
+  };
+}
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const lang = useSyncExternalStore(subscribe, getStoredLang, () => 'ar' as Language);
 
   useEffect(() => {
     const dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang === 'ar' ? 'ar-SA' : 'en';
     document.documentElement.dir = dir;
-    localStorage.setItem('lang', lang);
   }, [lang]);
 
   const setLanguage = useCallback((newLang: Language) => {
-    setLang(newLang);
+    localStorage.setItem('lang', newLang);
+    listeners.forEach(listener => listener());
   }, []);
 
   const t = useCallback((ar: string, en: string) => {
