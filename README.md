@@ -1,249 +1,93 @@
 # Etlaq Next.js Template
 
-A production-ready Next.js 16 template with JWT authentication, MongoDB integration, and a comprehensive UI component library. Built for rapid development of modern web applications.
+A minimal Next.js 16 template with RTL support, dark mode, and HeroUI v3 components.
 
-## ✨ Features
+## Features
 
-- **🔐 Complete Authentication System** - JWT-based auth with bcryptjs password hashing, protected routes, and session management
-- **🗄️ MongoDB Integration** - Mongoose ORM with type-safe schemas and connection pooling
-- **🎨 40+ UI Components** - HeroUI v3 component library with React Aria accessibility
-- **🤖 AI-Powered Development** - Specialized Claude Code agents for common development tasks
-- **⚡ Modern Stack** - Next.js 16, React 19, TypeScript 5, Tailwind CSS 4
-- **🌓 Theme Support** - Dark/light mode with OKLCH color system
-- **📱 Responsive Design** - Mobile-first RTL-ready layouts with sidebar navigation
-- **🔧 Developer Experience** - Turbopack, hot reload, strict TypeScript, ESLint
+- **Next.js 16** with React 19 and Turbopack
+- **RTL/LTR** with Arabic-first language toggle
+- **Dark/Light mode** with system detection
+- **HeroUI v3** component library
+- **Tailwind CSS 4** with OKLCH colors
+- **MongoDB** ready (Mongoose)
+- **TypeScript** strict mode
 
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Bun runtime (or Node.js 18+)
-- MongoDB database (local or Atlas)
-
-### Installation
-
-1. **Clone or download this template**
-   ```bash
-   git clone <repository-url>
-   cd etlaq-nextjs-template
-   ```
-
-2. **Install dependencies**
-   ```bash
-   bun install
-   ```
-
-3. **Configure environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-
-   Edit `.env.local` and add your MongoDB connection string:
-   ```env
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/
-   DB_NAME=your_app_name
-   JWT_SECRET=your-super-secret-jwt-key-at-least-32-chars
-   NEXT_PUBLIC_API_URL=http://localhost:3000
-   ```
-
-4. **Start development server**
-   ```bash
-   bun dev
-   ```
-
-5. **Open your browser**
-   Visit [http://localhost:3000](http://localhost:3000) to see the template
-
-## 📁 Project Structure
-
-```
-etlaq-nextjs-template/
-├── app/                    # Next.js App Router
-│   ├── api/               # API routes
-│   │   ├── auth/         # Authentication endpoints
-│   │   └── protected/    # Protected API examples
-│   ├── login/            # Login page
-│   ├── register/         # Registration page
-│   └── page.tsx          # Home page
-├── components/            # React components
-│   └── ...               # Feature components (UI from @heroui/react)
-├── lib/                   # Utility functions
-│   ├── auth.ts           # JWT token utilities
-│   ├── middleware.ts     # Auth middleware
-│   └── mongodb.ts        # Database connection
-├── models/                # Mongoose schemas
-│   └── User.ts           # User model
-├── contexts/              # React contexts
-│   └── AuthContext.tsx   # Authentication state
-└── .claude/               # Claude Code agents & skills
-    ├── agents/           # Specialized development agents
-    └── skills/           # Development skills
-```
-
-## 🔑 Authentication System
-
-The template includes a complete JWT authentication system:
-
-- **Registration**: `/register` - Create new user accounts with email/password
-- **Login**: `/login` - Authenticate existing users
-- **Protected Routes**: Use `withAuth()` middleware for API routes
-- **Client Auth**: Use `useAuth()` hook in components
-- **JWT Tokens**: 7-day expiration, secure token generation
-
-### Example: Protected API Route
-
-```typescript
-import { withAuth } from '@/lib/middleware';
-
-export const GET = withAuth(async (req, { user }) => {
-  return Response.json({ data: 'Protected data', user });
-});
-```
-
-### Example: Client Component
-
-```typescript
-'use client';
-import { useAuth } from '@/contexts/AuthContext';
-
-export default function MyComponent() {
-  const { user, logout } = useAuth();
-
-  return user ? <p>Welcome {user.name}!</p> : <p>Please log in</p>;
-}
-```
-
-## 🎨 UI Components
-
-This template uses HeroUI v3 (Beta) - a beautiful, accessible React component library built on Tailwind CSS v4 and React Aria:
-
-**Buttons**: Button, ButtonGroup, CloseButton
-**Forms**: TextField, TextArea, NumberField, Checkbox, RadioGroup, Select, Switch, Slider, DateField, TimeField, InputOTP, SearchField
-**Layout**: Card, Surface, Separator, Accordion, Disclosure, Tabs
-**Overlays**: Modal, AlertDialog, Popover, Tooltip, Dropdown
-**Collections**: ListBox, ComboBox, TagGroup
-**Feedback**: Alert, Spinner, Skeleton
-**Media**: Avatar
-
-```tsx
-// Import components from @heroui/react
-import { Button, Card, Alert, TextField } from '@heroui/react';
-```
-
-See `.claude/skills/heroui/SKILL.md` for complete documentation and usage examples.
-
-## 🤖 Claude Code Agents
-
-This template includes 9 specialized agents for AI-assisted development:
-
-- **`ui-design-specialist`** - UI/UX design, layouts, HeroUI components
-- **`auth-specialist`** - Authentication, protected routes, JWT
-- **`database-specialist`** - MongoDB, Mongoose schemas, queries
-- **`api-integration-specialist`** - External APIs, webhooks, integrations
-- **`ai-apps-developer`** - AI features, chat interfaces, streaming
-- **`image-finder`** - Image sourcing for UI (Unsplash, Pexels)
-- **`code-reviewer`** - Security audits, code quality, best practices
-- **`nextjs-debugger`** - Fix errors, performance issues, debugging
-
-See `CLAUDE.md` → "When to Use Which Agent" for detailed task-to-agent mappings.
-
-## 🛠️ Customization Guide
-
-### 1. Update Branding
-- Edit `app/layout.tsx` - Update metadata title/description
-- Edit `app/page.tsx` - Replace landing page content
-- Update `components/app-sidebar.tsx` - Replace sample navigation data
-
-### 2. Configure Database
-- Create your Mongoose models in `models/`
-- Update `DB_NAME` in `.env.local`
-- Add new schemas following the `User.ts` pattern
-
-### 3. Add Components
-- Import HeroUI components: `import { Component } from '@heroui/react'`
-- Create custom components in `components/`
-- Use TypeScript interfaces for props
-
-### 4. Customize Theme
-- Edit `app/globals.css` - Modify CSS variables for colors
-- Uses OKLCH color space for better color consistency
-- Light/dark mode automatically supported
-
-### 5. Remove Example Code (Optional)
-The following files contain sample data for demonstration:
-- `components/app-sidebar.tsx` - Sample navigation/teams/projects data
-- `components/login-form.tsx` - Non-functional UI example (different from working `/login`)
-- `components/dashboard-example/` - Sample dashboard with mock data
-
-Replace or remove these as needed for your application.
-
-## 🔧 Development Commands
+## Quick Start
 
 ```bash
+# Install
+bun install
+
 # Development
-bun dev              # Start dev server with Turbopack
+bun dev
 
-# Production
-bun run build        # Build for production
-bun start            # Start production server
+# Build
+bun run build
 
-# Code Quality
-bun lint             # Run ESLint
+# Lint
+bun lint
 ```
 
-## 📚 Environment Variables
+## Project Structure
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `MONGODB_URI` | Yes | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/` |
-| `DB_NAME` | Yes | Database name | `my_app_db` |
-| `JWT_SECRET` | Yes | Secret for JWT tokens (32+ chars) | Generate with `openssl rand -base64 32` |
-| `NEXT_PUBLIC_API_URL` | Yes | API base URL | `http://localhost:3000` (dev) |
+```
+app/
+├── page.tsx              # Home page
+├── layout.tsx            # Root layout
+├── globals.css           # Theme & styles
+components/
+├── ThemeToggle.tsx       # Dark/light mode
+├── LanguageToggle.tsx    # AR/EN toggle
+├── ScrollReveal.tsx      # Scroll animations
+contexts/
+├── LanguageContext.tsx   # RTL/LTR state
+lib/
+├── mongodb.ts            # Database connection
+├── utils.ts              # Utilities
+```
 
-Copy `.env.example` to `.env.local` and fill in your values.
+## Usage
 
-## 🚀 Deployment
+### Language Toggle
 
-### Vercel (Recommended)
+```tsx
+import { useLanguage } from '@/contexts/LanguageContext';
 
-1. Push your code to GitHub/GitLab/Bitbucket
-2. Import project to [Vercel](https://vercel.com)
-3. Add environment variables in Vercel dashboard
-4. Deploy
+const { t, isArabic } = useLanguage();
 
-### Other Platforms
+<h1>{t('مرحبا', 'Hello')}</h1>
+```
 
-This template works on any platform that supports Next.js 16:
-- Netlify
-- Railway
-- Render
-- AWS Amplify
-- Self-hosted with Docker
+### Theme Toggle
 
-Ensure your MongoDB database is accessible from your deployment environment.
+```tsx
+import { ThemeToggle } from '@/components/ThemeToggle';
 
-## 📖 Learn More
+<ThemeToggle />
+```
 
-- **Next.js Documentation** - [https://nextjs.org/docs](https://nextjs.org/docs)
-- **HeroUI v3 Components** - [https://v3.heroui.com/docs/react](https://v3.heroui.com/docs/react)
-- **Tailwind CSS** - [https://tailwindcss.com](https://tailwindcss.com)
-- **MongoDB Docs** - [https://docs.mongodb.com](https://docs.mongodb.com)
-- **Claude Code** - [https://claude.com/code](https://claude.com/code)
+### HeroUI Components
 
-For detailed architecture and Claude Code agent usage, see `CLAUDE.md`.
+```tsx
+import { Button, Card } from '@heroui/react';
 
-## 🤝 Support
+<Button variant="primary">Click me</Button>
+<Card>Content</Card>
+```
 
-Need help? Check these resources:
-- Review `CLAUDE.md` for comprehensive development guidance
-- Use the specialized Claude Code agents for specific tasks
-- Check [Next.js documentation](https://nextjs.org/docs)
-- Review component examples in the template
+## Environment
 
-## 📄 License
+```env
+MONGODB_URI=mongodb+srv://...
+DB_NAME=your_db_name
+```
 
-MIT License - feel free to use this template for any project.
+## Documentation
+
+- See `CLAUDE.md` for development guidelines
+- See [HeroUI v3 Docs](https://v3.heroui.com) for components
+- See [Next.js Docs](https://nextjs.org/docs) for framework
 
 ---
 
-**Built by Etlaq Studio** - Modern templates for rapid application development
+**Built by Etlaq Studio**
