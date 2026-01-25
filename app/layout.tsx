@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader, IBM_Plex_Sans_Arabic } from "next/font/google";
-import Script from "next/script";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,9 +46,16 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
+                  // Theme
                   var theme = localStorage.getItem('theme');
                   if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');
+                  }
+                  // Language
+                  var lang = localStorage.getItem('lang');
+                  if (lang === 'en') {
+                    document.documentElement.lang = 'en';
+                    document.documentElement.dir = 'ltr';
                   }
                 } catch (e) {}
               })();
@@ -59,21 +66,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${ibmPlexArabic.variable} font-sans antialiased`}
       >
-        {process.env.NODE_ENV === "development" && (
-          <>
-            <Script
-              src="//unpkg.com/react-grab/dist/index.global.js"
-              crossOrigin="anonymous"
-              strategy="beforeInteractive"
-            />
-            <Script
-              src="//unpkg.com/@react-grab/claude-code/dist/client.global.js"
-              crossOrigin="anonymous"
-              strategy="beforeInteractive"
-            />
-          </>
-        )}
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
