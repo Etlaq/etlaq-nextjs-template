@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@heroui/react';
+import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -32,7 +32,7 @@ export default function Home() {
           </p>
 
           <a href="https://etlaq.sa" target="_blank" rel="noopener noreferrer">
-            <Button size="lg" variant="primary" className="rounded-full px-8">
+            <Button size="lg" variant="default" className="rounded-full px-8">
               {t('ابدأ الآن', 'Get Started')}
               <Arrow className="ms-2 h-4 w-4" />
             </Button>

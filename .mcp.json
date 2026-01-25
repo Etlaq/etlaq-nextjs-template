@@ -8,51 +8,12 @@
       ],
       "env": {}
     },
-    "filesystem": {
-      "type": "stdio",
+    "shadcn": {
       "command": "npx",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/home/air/Projects/Etlaq/etlaq-nextjs-template"
-      ],
-      "env": {}
-    },
-    "git": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-git"
-      ],
-      "env": {}
-    },
-    "brave-search": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-brave-search"
-      ],
-      "env": {}
-    },
-    "heroui-react": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@heroui/react-mcp@latest"
-      ],
-      "env": {}
-    },
-    "magic": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@21st-dev/magic@beta"
-      ],
-      "env": {}
+        "shadcn@latest",
+        "mcp"
+      ]
     }
   }
 }

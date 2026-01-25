@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "@heroui/styles";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -47,9 +46,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* HeroUI specific overrides */
-  --color-surface: var(--card);
-  --color-surface-foreground: var(--card-foreground);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 /* Light mode - Purple primary, sophisticated palette, glassmorphism */
@@ -62,10 +61,10 @@
   --card-foreground: oklch(0.15 0 0);
   --popover: oklch(0.995 0 0);
   --popover-foreground: oklch(0.15 0 0);
-  /* Purple primary - for Tailwind classes */
+  /* Purple primary */
   --primary: oklch(0.55 0.22 280);
   --primary-foreground: oklch(0.98 0 0);
-  /* Purple accent - for HeroUI components */
+  /* Purple accent */
   --accent: oklch(0.55 0.22 280);
   --accent-foreground: oklch(0.98 0 0);
   /* Monotone secondary */
@@ -74,7 +73,7 @@
   --muted: oklch(0.96 0 0);
   --muted-foreground: oklch(0.45 0 0);
   --destructive: oklch(0.55 0.2 25);
-  /* Subtle borders - slightly more visible for glassmorphism */
+  /* Subtle borders */
   --border: oklch(0.90 0 0);
   --input: oklch(0.93 0 0);
   --ring: oklch(0.55 0.22 280);
@@ -107,10 +106,10 @@
   --card-foreground: oklch(0.92 0 0);
   --popover: oklch(0.16 0 0);
   --popover-foreground: oklch(0.92 0 0);
-  /* Purple primary - for Tailwind classes */
+  /* Purple primary */
   --primary: oklch(0.7 0.2 280);
   --primary-foreground: oklch(0.13 0 0);
-  /* Purple accent - for HeroUI components */
+  /* Purple accent */
   --accent: oklch(0.7 0.2 280);
   --accent-foreground: oklch(0.13 0 0);
   /* Monotone secondary */
@@ -119,7 +118,7 @@
   --muted: oklch(0.2 0 0);
   --muted-foreground: oklch(0.6 0 0);
   --destructive: oklch(0.65 0.2 25);
-  /* Subtle borders - slightly more visible for glassmorphism */
+  /* Subtle borders */
   --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 10%);
   --ring: oklch(0.7 0.2 280);

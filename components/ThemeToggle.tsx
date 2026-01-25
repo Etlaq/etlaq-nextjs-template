@@ -1,100 +1,76 @@
 'use client';
 
-/* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from 'react';
-import { Button } from '@heroui/react';
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun, Monitor, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useTheme, type Theme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-type Theme = 'light' | 'dark' | 'system';
+const themes: { value: Theme; icon: typeof Sun; labelAr: string; labelEn: string }[] = [
+  { value: 'light', icon: Sun, labelAr: 'فاتح', labelEn: 'Light' },
+  { value: 'dark', icon: Moon, labelAr: 'داكن', labelEn: 'Dark' },
+  { value: 'system', icon: Monitor, labelAr: 'تلقائي', labelEn: 'System' },
+];
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('system');
-  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
 
-  useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) {
-      setTheme(stored);
-    }
-    setMounted(true);
-  }, []);
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="rounded-full w-10 h-10 bg-background/80 backdrop-blur-sm border border-border/50 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 shadow-sm"
+          aria-label={t('تغيير المظهر', 'Change theme')}
+        >
+          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">{t('تغيير المظهر', 'Change theme')}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-[140px]">
+        {themes.map(({ value, icon: ItemIcon, labelAr, labelEn }) => (
+          <DropdownMenuItem
+            key={value}
+            onClick={() => setTheme(value)}
+            className="flex items-center justify-between gap-2 cursor-pointer"
+          >
+            <span className="flex items-center gap-2">
+              <ItemIcon className="h-4 w-4" />
+              {t(labelAr, labelEn)}
+            </span>
+            {theme === value && <Check className="h-4 w-4 text-primary" />}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
-  useEffect(() => {
-    if (!mounted) return;
+// Simple toggle button variant (no dropdown)
+export function ThemeToggleSimple() {
+  const { toggleTheme, theme } = useTheme();
+  const { t } = useLanguage();
 
-    const root = document.documentElement;
-
-    if (theme === 'system') {
-      localStorage.removeItem('theme');
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.classList.toggle('dark', systemDark);
-    } else {
-      localStorage.setItem('theme', theme);
-      root.classList.toggle('dark', theme === 'dark');
-    }
-  }, [theme, mounted]);
-
-  // Listen for system preference changes
-  useEffect(() => {
-    if (!mounted) return;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (theme === 'system') {
-        document.documentElement.classList.toggle('dark', e.matches);
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [theme, mounted]);
-
-  if (!mounted) {
-    return (
-      <div className="w-10 h-10 rounded-xl bg-primary/5 animate-pulse" />
-    );
-  }
-
-  const cycleTheme = () => {
-    const themes: Theme[] = ['light', 'dark', 'system'];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-
-  const getIcon = () => {
-    switch (theme) {
-      case 'light':
-        return <Sun className="h-4 w-4" />;
-      case 'dark':
-        return <Moon className="h-4 w-4" />;
-      case 'system':
-        return <Monitor className="h-4 w-4" />;
-    }
-  };
-
-  const getLabel = () => {
-    switch (theme) {
-      case 'light':
-        return 'Light';
-      case 'dark':
-        return 'Dark';
-      case 'system':
-        return 'System';
-    }
-  };
+  const currentTheme = themes.find((t) => t.value === theme) || themes[2];
+  const Icon = currentTheme.icon;
 
   return (
     <Button
       variant="secondary"
-      size="sm"
-      onPress={cycleTheme}
-      className="rounded-full w-10 h-10 p-0 bg-background/80 backdrop-blur-sm border border-border/50 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 shadow-sm"
-      aria-label={`Current theme: ${getLabel()}. Click to change.`}
+      size="icon"
+      onClick={toggleTheme}
+      className="rounded-full w-10 h-10 bg-background/80 backdrop-blur-sm border border-border/50 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 shadow-sm"
+      aria-label={`${t('المظهر الحالي:', 'Current theme:')} ${t(currentTheme.labelAr, currentTheme.labelEn)}`}
     >
-      <span className="text-foreground/70 hover:text-primary transition-colors">
-        {getIcon()}
-      </span>
+      <Icon className="h-4 w-4 text-foreground/70" />
     </Button>
   );
 }

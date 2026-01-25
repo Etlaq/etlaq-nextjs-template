@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader, IBM_Plex_Sans_Arabic } from "next/font/google";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -66,9 +68,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${ibmPlexArabic.variable} font-sans antialiased`}
       >
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            {children}
+            <Toaster />
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
