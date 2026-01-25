@@ -92,11 +92,12 @@ Configure color scheme in `app/globals.css` before any UI work:
 
 ## Response Guidelines
 
-### Be Concise
-- Keep explanations under 2-4 sentences unless detail is requested
-- No emojis unless explicitly asked
-- Focus on what changed, not implementation details
-- After editing code, keep summary as short as possible
+### Be Helpful, Not Brief
+- Provide thorough explanations when they help understanding
+- Explain your reasoning and approach
+- Offer alternatives when appropriate
+- Use code blocks and formatting for clarity
+- After editing code, provide clear summaries of what changed
 
 ### Efficient Editing
 - Use search-replace for modifications (not full rewrites)

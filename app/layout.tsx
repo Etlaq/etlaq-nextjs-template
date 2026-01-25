@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Newsreader, IBM_Plex_Sans_Arabic, Noto_Naskh_Arabic } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader, IBM_Plex_Sans_Arabic } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { AuthProvider } from "@/contexts/AuthContext";
 
-// English fonts
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,22 +20,15 @@ const newsreader = Newsreader({
   weight: ["300", "400", "500", "600"],
 });
 
-// Arabic fonts
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-sans-arabic",
   subsets: ["arabic", "latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
 
-const notoNaskhArabic = Noto_Naskh_Arabic({
-  variable: "--font-serif-arabic",
-  subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-});
-
 export const metadata: Metadata = {
-  title: "إطلاق - قالب Next.js",
-  description: "قالب Next.js مع نظام المصادقة وقاعدة بيانات MongoDB",
+  title: "Next.js Template",
+  description: "Minimal Next.js template",
 };
 
 export default function RootLayout({
@@ -49,11 +39,8 @@ export default function RootLayout({
   return (
     <html lang="ar-SA" dir="rtl" suppressHydrationWarning>
       <head>
-        {/* Tell browsers and extensions this site supports both color schemes */}
         <meta name="color-scheme" content="light dark" />
-        {/* Tell Dark Reader extension to not apply its dark mode */}
         <meta name="darkreader-lock" />
-        {/* Prevent flash of unstyled content for dark mode */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -70,7 +57,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${ibmPlexArabic.variable} ${notoNaskhArabic.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${ibmPlexArabic.variable} font-sans antialiased`}
       >
         {process.env.NODE_ENV === "development" && (
           <>
@@ -86,11 +73,7 @@ export default function RootLayout({
             />
           </>
         )}
-        <AuthProvider>
-          <LanguageProvider>
-            {children}
-          </LanguageProvider>
-        </AuthProvider>
+        {children}
       </body>
     </html>
   );
