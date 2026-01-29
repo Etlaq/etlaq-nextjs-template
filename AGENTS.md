@@ -10,35 +10,40 @@ bun lint         # ESLint
 ```
 
 ## Stack
-Next.js 16 • React 19 • TypeScript • Tailwind CSS 4 • HeroUI v3 • MongoDB/Mongoose
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 (OKLCH) · shadcn/ui · MongoDB/Mongoose
 
 ## Critical Rules
 
 1. **Read before edit** - Never modify files without reading them first
 2. **Semantic colors only** - Use `bg-background`, `text-foreground`, never `bg-white`, `text-black`
-3. **RTL-safe classes** - Use `ps-`, `pe-`, `ms-`, `me-`, `start`, `end`
-4. **HeroUI variants** - Use `variant="primary"`, not inline color overrides
-5. **Small components** - Split large files, maximize reusability
+3. **RTL-safe classes** - Use `ps-`, `pe-`, `ms-`, `me-`, `start`, `end` (never `pl-`, `pr-`, `left-`, `right-`)
+4. **Arabic-first content** - Always provide both Arabic and English; Arabic is the default
+5. **No `any` types** - Use proper TypeScript types
 
-## HeroUI v3 Button Variants
-`primary` | `secondary` | `tertiary` | `ghost` | `danger` | `danger-soft`
-
-## Language Context
+## shadcn/ui Button Variants
 ```tsx
-const { t, isArabic } = useLanguage();
-<h1>{t('مرحبا', 'Hello')}</h1>
+import { Button } from '@/components/ui/button';
+// variant: default | secondary | outline | ghost | link | destructive
+// size: default | xs | sm | lg | icon | icon-xs | icon-sm | icon-lg
+```
+
+## Context Hooks
+```tsx
+const { t, isArabic, dir, setLanguage } = useLanguage();  // from @/contexts/LanguageContext
+const { theme, isDark, toggleTheme, setTheme } = useTheme(); // from @/contexts/ThemeContext
 ```
 
 ## File Structure
 ```
-app/page.tsx, layout.tsx, globals.css
-components/ThemeToggle, LanguageToggle, ScrollReveal
-contexts/LanguageContext.tsx
-lib/mongodb.ts, utils.ts
+app/page.tsx, layout.tsx, globals.css, error.tsx, loading.tsx
+components/ThemeToggle, LanguageToggle, ui/
+contexts/LanguageContext.tsx, ThemeContext.tsx
+lib/mongodb.ts, utils.ts, env.ts
 ```
 
 ## Code Style
 - Absolute imports: `@/lib/x`, `@/components/x`
-- No `any` types - use proper TypeScript
 - Client components: `'use client'` at top
-- Error handling: try/catch with console.error
+- Class merging: `cn()` from `@/lib/utils`
+- Error handling: try/catch with `console.error` + `toast.error()`
+- Touch targets: minimum 44px
